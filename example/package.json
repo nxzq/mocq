@@ -1,0 +1,16 @@
+{
+  "name": "mocquer-example",
+  "scripts": {
+    "example:sql": "bun sql-data-load.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "mocquer": "workspace:*"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.3.1"
+  }
+}

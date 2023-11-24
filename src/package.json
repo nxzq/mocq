@@ -1,0 +1,12 @@
+{
+  "name": "mocquer",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
