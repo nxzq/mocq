@@ -1,4 +1,4 @@
-import { mocquer } from "mocquer";
+import { mocq, generator } from "mocq";
 import { faker } from "@faker-js/faker";
 
 // in this example we are creating a workflow to load a library sql database
@@ -39,58 +39,50 @@ const bookDataSource = {
   name: faker.company.buzzPhrase
 }
 
-const publisherGenerator = mocquer.createGenerator(publisherDataSource)
-const authorGenerator = mocquer.createGenerator(authorDataSource)
-const bookGenerator = mocquer.createGenerator(bookDataSource)
+const publisherGenerator = generator(publisherDataSource)
+const authorGenerator = generator(authorDataSource)
+const bookGenerator = generator(bookDataSource)
 
-const dbLoad = mocquer.createWorkflow({
-  preHandler: () => console.log(`CREATE TABLE publisher (id char, name char);\nCREATE TABLE author (id char, first_name char, last_name char);\nCREATE TABLE book (id char, name char, author_id char, publisher_id char);`),
-  actions: [
-    {
-      name: 'publishers',
-      generator: publisherGenerator,
-      count: 3,
-      handler: {
-        execType: 'iterate',
-        callback: (data: Publisher) => {
-          console.log(`INSERT INTO publisher VALUES ('${data.id}', '${data.name}');`)
-        },
+// mocq config
+const dbLoad = mocq({
+  publishers: {
+    generator: publisherGenerator,
+    count: 3,
+    handler: {
+      execType: 'iterate',
+      callback: (data: Publisher) => {
+        console.log(`INSERT INTO publisher VALUES ('${data.id}', '${data.name}');`)
       },
     },
-    {
-      name: 'authors',
-      generator: authorGenerator,
-      count: 5,
-      handler: {
-        execType: 'iterate',
-        callback: (data: Author) => {
-          console.log(`INSERT INTO author VALUES ('${data.id}', '${data.first_name}', '${data.last_name}');`)
-        },
+  },
+  authors: {
+    generator: authorGenerator,
+    count: 5,
+    handler: {
+      execType: 'iterate',
+      callback: (data: Author) => {
+        console.log(`INSERT INTO author VALUES ('${data.id}', '${data.first_name}', '${data.last_name}');`)
       },
     },
-    {
-      name: 'books',
-      generator: bookGenerator,
-      count: 15,
-      handler: {
-        execType: 'batch',
-        callback: (data: Book[]) => console.log('(book count: ',data.length,')\n','sample book data: ',data[0]),
-      },
-      connections: [
-        {
-          actionName: 'publishers',
-          callback: (data: Publisher[])=>({ publisher_id: () => faker.helpers.arrayElement(data).id }),
-        },
-        {
-          actionName: 'authors',
-          callback: (data: Author[])=>({ author_id: () => faker.helpers.arrayElement(data).id }),
-        }
-      ]
-    }
-  ],
-  postHandler: () => console.log("done ✅"),
+  },
+  books: {
+    generator: bookGenerator,
+    count: 15,
+    connections: {
+      publishers: (data: Publisher[])=>({ publisher_id: () => faker.helpers.arrayElement(data).id }),
+      authors: (data: Author[])=>({ author_id: () => faker.helpers.arrayElement(data).id }),
+    },
+    handler: {
+      execType: 'batch',
+      callback: (data: Book[]) => console.log('(book count: ',data.length,')\n','sample book data: ',data[0]),
+    },
+  },
 })
 
-const { data } = dbLoad.execute()
-
-// console.log('🧪: ', data)
+console.log('------- load db ---------')
+// pre load step
+console.log(`CREATE TABLE publisher (id char, name char);\nCREATE TABLE author (id char, first_name char, last_name char);\nCREATE TABLE book (id char, name char, author_id char, publisher_id char);`)
+// mocq executed
+dbLoad.execute()
+// post load step
+console.log("done ✅")

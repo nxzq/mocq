@@ -1,4 +1,4 @@
-# mocquer 🇫🇷
+# mocq 🇫🇷
 
 > overall this is doing what i want it to do but im not convinced i can get the typescript to hum with the current interface (`src/types.ts`), it would have to infer the type of the action based on the generator, then infer the types of the connections based on the previous actions in the array, also inside `src/workflow.ts` im not sure if i can build up that object during run time and keep it type safe
 
@@ -6,7 +6,7 @@
 
 thoughts & questions:
 
-- I think `workflow` might be an overloaded concept (coordination of data generation & connections AND post execution? however i also think it kinda has to be that way as its the whole point of this and maybe its only workflow (i.e. workflow goes away, mocquer is the workflow and generator is a helper export))
+- I think `workflow` might be an overloaded concept (coordination of data generation & connections AND post execution? however i also think it kinda has to be that way as its the whole point of this and maybe its only workflow (i.e. workflow goes away, mocq is the workflow and generator is a helper export))
 
 - i don't love the data source implementation, i want it to be wide open and for people to easily use whatever they are already using (faker/zod/static), however i feel like its a bit heavy
 
@@ -40,7 +40,7 @@ consider this basic sql diagram
 
 `DutyRoster` has relationships (in this case foreign key but really the type is irrelevant) to `Event`, `EventDuty` & `Staff`.
 
-> `mocquer` allows you to create `generators` for all the various tables data structures. 
+> `mocq` allows you to create `generators` for all the various tables data structures. 
 >
 > then create a `workflow` that injects the various IDs from generated `Event`, `EventDuty` & `Staff` mock data into generated `DutyRoster` mock data.
 >
@@ -79,16 +79,16 @@ bun test --coverage
 a `generator` is a basic structured way to generate an array of data.
 
 ```js
-import { mocquer } from 'mocquer';
+import { mocq } from 'mocq';
 import { faker } from '@faker-js/faker'
 
 const myDataSource = {
-    id: () => faker.string.uuid(),
-    first_name: () => faker.person.firstName(),
-    last_name: () => faker.person.lastName()
-  }
-  
-  const { generate: generateMyData} = mocquer.createGenerator(myDataSource)
+  id: () => faker.string.uuid(),
+  first_name: () => faker.person.firstName(),
+  last_name: () => faker.person.lastName()
+}
+
+const { generate: generateMyData} = mocq.createGenerator(myDataSource)
 ```
 
 #### Generate

@@ -6,34 +6,28 @@ export type Generator<T=unknown> = {
   generate: (props?: { count?: number, overrides?: Overrides<T>}) => T[]
 }
 
-/*
-  extends Record<string, string>
-*/
-
 export type Overrides<T> = Partial<{
   [K in keyof T]: CallableFunction
 }>
 
-export type Action<T> = {
-  name: string
-  generator: Generator<T>
-  count: number
-  handler?: {
-    execType: 'batch' | 'iterate'
-    callback: () => Promise<void>
-    concurrency?: number
-  }
-  connections?: {
-    actionName: string
-    // possible connection helper function
-    // merge?: string
-    // orphanRate?: number
-    callback: (data: any[]) => Overrides<T>
-  }[]
+export type Connection = {
+  [key: string]: CallableFunction
 }
 
-export type Workflow = {
-  preHandler?: CallableFunction
-  actions: Action[]
-  postHandler?: CallableFunction
+export type BatchHandler = ((data: any[]) => Promise<unknown | void> | unknown | void)
+export type IterateHandler = ((data: any) => Promise<unknown | void> | unknown | void)
+
+export type Config = {
+  [key:string]: {
+    generator: Generator
+    count: number
+    connections?: {
+      [key: string]: (data: any[]) => Connection
+    }
+    handler?: {
+      execType: 'batch' | 'iterate'
+      callback: BatchHandler | IterateHandler
+      // concurrency?: number
+    }
+  }
 }
