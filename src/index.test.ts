@@ -1,11 +1,9 @@
-import { faker } from '@faker-js/faker'
 import { expect, test } from 'bun:test'
 
-import { mocq, generator } from '.'
+import { mocq, MocQ, DataSource } from '.'
 
 test("[mocq] exports", () => {
   expect(mocq).toBeDefined()
-  expect(generator).toBeDefined()
 });
 
 test("[mocq] example", () => {
@@ -25,62 +23,65 @@ test("[mocq] example", () => {
     tags: string[]
     created_by: string
   }
-  const availableTags: Tag[] = []
+
+  let availableTags: Tag[] = []
   let mockElementDataAccumulator: Element[] = []
-  const userDataSource = {
-    alias: () => faker.lorem.word({ length: 6 }),
-    first_name: faker.person.firstName,
-    last_name: faker.person.lastName
+
+  const userDataSource: DataSource<User> = {
+    alias: (i) => `alias_${i}`,
+    first_name: (i) => `first_name_${i}`,
+    last_name: (i) => `last_name_${i}`
   }
   
-  const tagDataSource = {
-    id: faker.string.uuid,
-    name: faker.company.buzzNoun,
+  const tagDataSource: DataSource<Tag> = {
+    id: (i) => `t${`0000000000000${i}`.slice(-9)}`,
+    name: (i) => `tag_name_${i}`,
     created_by: () => ''
   }
   
-  const elementDataSource = {
-    id: faker.string.uuid,
-    name: faker.company.buzzPhrase,
+  const elementDataSource: DataSource<Element> = {
+    id: (i) => `e${`0000000000000${i}`.slice(-9)}`,
+    name: (i) => `element_name_${i}`,
     tags: () => [],
     created_by: () => ''
   }
-  
-  const dbLoad = mocq({
+
+  type dbLoadConfig = {
+    users: MocQ<User>
+    tags: MocQ<Tag>
+    elements: MocQ<Element>
+  }
+
+  const dbLoadMocqConfig: dbLoadConfig = {
     users: {
-      generator: generator(userDataSource),
+      generator: userDataSource,
       count: 25
     },
     tags: {
-      generator: generator(tagDataSource),
+      generator: tagDataSource,
         count: 25,
         connections: {
-          users: (data: User[])=>({ created_by: () => faker.helpers.arrayElement(data).alias }),
+          users: (data: User[])=>({ created_by: () => data[Math.floor(Math.random() * data.length)].alias }),
         },
-        handler: {
-          execType: 'iterate',
-          callback: (data: Tag) => {
-            availableTags.push(data)
-          },
+        handler: (data: Tag[]) => {
+          availableTags = data
         },
     },
     elements: {
-      generator: generator(elementDataSource),
+      generator: elementDataSource,
         count: 100,
         connections: {
-          users: (data: User[])=>({ created_by: () => faker.helpers.arrayElement(data).alias }),
-          tags: (data: Tag[])=>({ tags: () => faker.helpers.arrayElements(data, { min: 0, max: 4 }).map(x => x.id) }),
+          users: (data: User[])=>({ created_by: (i) => data[Math.floor(Math.random() * data.length)].alias+i }),
+          tags: (data: Tag[])=>({ tags: () => [...new Set([data[Math.floor(Math.random() * data.length)], data[Math.floor(Math.random() * data.length)]])].map(x => x.id) }),
         },
-        handler: {
-          execType: 'batch',
-          callback: (data: Element[]) => {
-            mockElementDataAccumulator = data;
-          },
+        handler: (data: Element[]) => {
+          mockElementDataAccumulator = data;
         },
     },
-  })
+  }
   
-  const { data } = dbLoad.execute()
-  expect(availableTags.sort()).toEqual(data.tags.sort())
-  expect((mockElementDataAccumulator).sort()).toEqual(data.elements.sort())
+  const dbLoad = mocq(dbLoadMocqConfig)
+  const { data: { tags, elements } } = dbLoad.execute()
+  expect(availableTags.sort()).toEqual(tags.sort())
+  expect((mockElementDataAccumulator).sort()).toEqual(elements.sort())
 })

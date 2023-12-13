@@ -1,33 +1,20 @@
-export type DataSource = {
-  [key: string]: CallableFunction
+export interface Config {
+  [key:string]: MocQ<unknown>
 }
 
-export type Generator<T=unknown> = {
-  generate: (props?: { count?: number, overrides?: Overrides<T>}) => T[]
+export type MocQ<T> = {
+  generator: DataSource<T>
+  count: number
+  connections?: {
+    [key: string]: (data: any[]) => Overrides<T>
+  }
+  handler?: (data: any[]) => Promise<unknown | void> | unknown | void
+}
+
+export type DataSource<T> = {
+  [K in keyof T]: (index?: number) => unknown
 }
 
 export type Overrides<T> = Partial<{
-  [K in keyof T]: CallableFunction
+  [K in keyof T]: (index?: number) => unknown
 }>
-
-export type Connection = {
-  [key: string]: CallableFunction
-}
-
-export type BatchHandler = ((data: any[]) => Promise<unknown | void> | unknown | void)
-export type IterateHandler = ((data: any) => Promise<unknown | void> | unknown | void)
-
-export type Config = {
-  [key:string]: {
-    generator: Generator
-    count: number
-    connections?: {
-      [key: string]: (data: any[]) => Connection
-    }
-    handler?: {
-      execType: 'batch' | 'iterate'
-      callback: BatchHandler | IterateHandler
-      // concurrency?: number
-    }
-  }
-}
