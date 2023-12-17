@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 
 import { validate } from './validate'
+import { emphasisLogText } from './logger'
 import { MocQ, DataSource } from '.'
 
 type Node = {
@@ -64,7 +65,7 @@ describe('[validation]', () => {
     try {
       validate(mocqConfig)
     } catch (e: Error | any) {
-      expect(e?.message).toBe(`key "elements" cannot reference itself in connections`)
+      expect(e?.message).toBe(`key "${emphasisLogText('elements')}" cannot reference itself in connections`)
     }
   })
   test("cyclic connections config", () => {
@@ -102,7 +103,7 @@ describe('[validation]', () => {
     try {
       validate(mocqConfig)
     } catch (e: Error | any) {
-      expect(e?.message).toBe(`Cyclic dependencies detected involving key "elements"\n\t↳set \x1b[0;36mMOCQ_VERBOSE\x1b[0m env variable to \x1b[0;36mtrue\x1b[0m to help debug`)
+      expect(e?.message).toBe(`cyclic dependencies detected involving key "${emphasisLogText('elements')}"`)
     }
   })
   test("undefined/missing connection config", () => {
@@ -124,7 +125,7 @@ describe('[validation]', () => {
     try {
       validate(mocqConfig)
     } catch (e: Error | any) {
-      expect(e?.message).toBe(`key "chesto" is not present in config but referenced in key "elements" connections`)
+      expect(e?.message).toBe(`key "${emphasisLogText('chesto')}" is not present in config but referenced in key "${emphasisLogText('elements')}" connections`)
     }
   })
 })

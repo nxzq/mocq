@@ -70,6 +70,6 @@ console.log('------- load db ---------')
 // pre load step
 console.log(`CREATE TABLE publisher (id char, name char);\nCREATE TABLE author (id char, first_name char, last_name char);\nCREATE TABLE book (id char, name char, author_id char, publisher_id char);`)
 // mocq executed
-const { data: { publishers, authors, books }} = mocq(dbLoad).execute()
+const { data: { publishers, authors, books }} = await mocq(dbLoad).execute()
 // post load step
 console.log("done ✅")

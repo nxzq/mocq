@@ -2,7 +2,7 @@
 import { validate } from './validate'
 import { createGenerator } from './generator'
 import { Config, MocQ, DataSource } from './types'
-import { logger } from './logger'
+import { logger, emphasisLogText } from './logger'
 
 type extractMocQType<T> = T extends MocQ<infer X> ? X : unknown
 
@@ -42,13 +42,18 @@ export const mocq = <T>(config: T extends Config ? T : Config) => {
   }
   return {
     generate,
-    execute: () => {
+    execute: async () => {
       const data = generate()
       logger.info('data execution init...')
       for (const key of keys) {
         if (config[key].handler !== undefined) {
           logger.system('execution', String(key))
-          config[key].handler!(data[key])
+          try {
+            await config[key].handler!(data[key])
+          } catch (e: Error | any) {
+            logger.error(`error occurred while executing handler for key "${emphasisLogText(String(key))}"`)
+            throw new Error(e.message)
+          }
         }
       }
       logger.success('data execution complete')

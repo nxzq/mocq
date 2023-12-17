@@ -6,20 +6,28 @@ const log = (...params: any): void => {
   }
 }
 
-const prefix = '\x1b[0;36mmocq\x1b[0m'
 
 type systemLogType = 'generation' | 'connection' | 'execution' | 'evaluation' | 'validation' 
 
+export const emphasisLogText = (text: string) => {
+  return `\x1b[1;37m${text}\x1b[0m`
+}
+
+export const mocqLogText = (text: string) => {
+  return `\x1b[0;36m${text}\x1b[0m`
+}
+
+const prefix = mocqLogText('mocq')
+
 export const logger = {
   info: (content: string): void => {
-    log(prefix, `\x1b[0;36m${content}\x1b[0m`)
+    log(prefix, mocqLogText(content))
   },
   error: (content: string): void => {
     console.error(prefix, '\x1b[1;31m[ERROR]\x1b[0m', content)
-    throw new Error(content)
   },
   success: (content: any): void => {
-    console.log(prefix, `\x1b[1;32m${content} ✅\x1b[0m`)
+    log(prefix, `\x1b[1;32m${content} ✅\x1b[0m`)
   },
   log: (...content: any): void => {
     log(...content)

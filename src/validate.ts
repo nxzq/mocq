@@ -1,4 +1,4 @@
-import { logger } from "./logger"
+import { logger, emphasisLogText, mocqLogText } from "./logger"
 import { Config } from "."
 
 export const validate = <T>(config: T extends Config ? T : Config) => {
@@ -11,7 +11,9 @@ export const validate = <T>(config: T extends Config ? T : Config) => {
   
     function visit(key: keyof typeof config) {
       if (tempStack.has(key)) {
-        logger.error(`Cyclic dependencies detected involving key "${String(key)}"\n\t↳set \x1b[0;36mMOCQ_VERBOSE\x1b[0m env variable to \x1b[0;36mtrue\x1b[0m to help debug`)
+        const message = `cyclic dependencies detected involving key "${emphasisLogText(String(key))}"`
+        logger.error(`${message}\n\t↳ set ${mocqLogText('MOCQ_VERBOSE')} env variable to ${mocqLogText('true')} to help debug`)
+        throw new Error(message)
       }
   
       if (!visited.has(key)) {
@@ -21,12 +23,18 @@ export const validate = <T>(config: T extends Config ? T : Config) => {
           Object.keys(config[key].connections!).forEach(connectionKey => {
             logger.system('evaluation', `${connectionKey} ➜ ${String(key)}`)
             const dependency = arr.find(key => key === connectionKey)
-            if (connectionKey === key)
-              logger.error(`key "${connectionKey}" cannot reference itself in connections`)
+            if (connectionKey === key) {
+              const message = `key "${emphasisLogText(connectionKey)}" cannot reference itself in connections`
+              logger.error(message)
+              throw new Error(message) 
+            }
             if (dependency) {
               visit(dependency)
-            } else 
-              logger.error(`key "${connectionKey}" is not present in config but referenced in key "${String(key)}" connections`)
+            } else {
+              const message = `key "${emphasisLogText(connectionKey)}" is not present in config but referenced in key "${emphasisLogText(String(key))}" connections`
+              logger.error(message)
+              throw new Error(message)
+            }
           })
         }
         visited.add(key)
