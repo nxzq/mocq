@@ -7,7 +7,6 @@
     "website"
   ],
   "scripts": {
-    "build": "cd src && bun build ./index.ts --outdir ../dist",
     "docs": "cd website && bun run serve",
     "docs:build": "cd website && bun run build",
     "docs:dev": "cd website && bun start",
