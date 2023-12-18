@@ -8,22 +8,11 @@ type Publisher = {
   name: string
 }
 
-const publisherDataSource = () => ({
-  id: faker.string.uuid(),
-  name: faker.company.name()
-})
-
 type Author = {
   id: string
   first_name: string
   last_name: string
 }
-
-const authorDataSource = () => ({
-  id: faker.string.uuid(),
-  first_name: faker.person.firstName(),
-  last_name: faker.person.lastName()
-})
 
 type Book = {
   id: string
@@ -31,6 +20,17 @@ type Book = {
   author_id: string
   name: string
 }
+
+const publisherDataSource = () => ({
+  id: faker.string.uuid(),
+  name: faker.company.name()
+})
+
+const authorDataSource = () => ({
+  id: faker.string.uuid(),
+  first_name: faker.person.firstName(),
+  last_name: faker.person.lastName()
+})
 
 const bookDataSource = () => ({
   id: faker.string.uuid(),
