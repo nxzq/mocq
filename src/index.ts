@@ -14,7 +14,7 @@ export const mocq = <T>(config: T extends Config ? T : Config) => {
     logger.info('data generation init...')
     const context = Object.assign({}, ...keys.map(x => {
       const _tmp = config[x]
-      return {x: [] as extractMocQType<typeof _tmp>[]}
+      return {[x]: [] as extractMocQType<typeof _tmp>[]}
     })) as { [K in keyof typeof config]: extractMocQType<typeof config[K]>[]}
     for (const key of keys) {
       logger.system('generation', String(key))

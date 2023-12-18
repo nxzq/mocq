@@ -1,6 +1,6 @@
 {
   "name": "mocq",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "module": "index.ts",
   "type": "module",
   "main": "dist/index.js",
@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "bun run ./build.mjs --outdir ./dist",
+    "build": "cp ../README.md ./README.md && bun run ./build.mjs --outdir ./dist",
     "prepublishOnly": "bun run build"
   },
   "license": "MIT",
