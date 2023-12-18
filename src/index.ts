@@ -1,7 +1,7 @@
 
 import { validate } from './validate'
 import { createGenerator } from './generator'
-import { Config, MocQ, DataSource } from './types'
+import { Config, MocQ, MockDataGenerator } from './types'
 import { logger, emphasisLogText } from './logger'
 
 type extractMocQType<T> = T extends MocQ<infer X> ? X : unknown
@@ -9,7 +9,7 @@ type extractMocQType<T> = T extends MocQ<infer X> ? X : unknown
 export * from './types'
 export const mocq = <T>(config: T extends Config ? T : Config) => {
   const keys = validate(config)
-  type extractGeneric<T> = T extends DataSource<infer X> ? X : unknown
+  type extractGeneric<T> = T extends MockDataGenerator<infer X> ? X : unknown
   const generate = () => {
     logger.info('data generation init...')
     const context = Object.assign({}, ...keys.map(x => {

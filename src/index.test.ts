@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 
-import { mocq, MocQ, DataSource } from '.'
+import { mocq, MocQ, MockDataGenerator } from '.'
 
 describe('[mocq]', async () => {
   test("exports", () => {
@@ -27,24 +27,24 @@ describe('[mocq]', async () => {
     let availableTags: Tag[] = []
     let mockElementDataAccumulator: Element[] = []
   
-    const userDataSource: DataSource<User> = {
-      alias: (i) => `alias_${i}`,
-      first_name: (i) => `first_name_${i}`,
-      last_name: (i) => `last_name_${i}`
-    }
+    const userDataSource: MockDataGenerator<User> = (i: number) => ({
+      alias: `alias_${i}`,
+      first_name: `first_name_${i}`,
+      last_name: `last_name_${i}`
+    })
     
-    const tagDataSource: DataSource<Tag> = {
-      id: (i) => `t${`0000000000000${i}`.slice(-9)}`,
-      name: (i) => `tag_name_${i}`,
-      created_by: () => ''
-    }
+    const tagDataSource: MockDataGenerator<Tag> = (i: number) => ({
+      id: `t${`0000000000000${i}`.slice(-9)}`,
+      name: `tag_name_${i}`,
+      created_by: ''
+    })
     
-    const elementDataSource: DataSource<Element> = {
-      id: (i) => `e${`0000000000000${i}`.slice(-9)}`,
-      name: (i) => `element_name_${i}`,
-      tags: () => [],
-      created_by: () => ''
-    }
+    const elementDataSource: MockDataGenerator<Element> = (i: number) => ({
+      id: `e${`0000000000000${i}`.slice(-9)}`,
+      name: `element_name_${i}`,
+      tags: [],
+      created_by: ''
+    })
   
     type dbLoadConfig = {
       users: MocQ<User>
@@ -89,10 +89,10 @@ describe('[mocq]', async () => {
     type Node = {
       name: string
     }
-    
-    const nodeDataSource: DataSource<Node> = {
-      name: (i) => `name_${i}`,
-    }
+
+    const createNode = (i: number): Node => ({
+      name: `name_${i}`,
+    })
 
     type Config = {
       elements: MocQ<Node>
@@ -100,7 +100,7 @@ describe('[mocq]', async () => {
 
     const mocqConfig: Config = {
       elements: {
-        generator: nodeDataSource,
+        generator: createNode,
           count: 100,
           handler: () => {throw new Error('custom handler error')}
       }

@@ -8,10 +8,10 @@ type Publisher = {
   name: string
 }
 
-const publisherDataSource = {
-  id: faker.string.uuid,
-  name: faker.company.name
-}
+const publisherDataSource = () => ({
+  id: faker.string.uuid(),
+  name: faker.company.name()
+})
 
 type Author = {
   id: string
@@ -19,11 +19,11 @@ type Author = {
   last_name: string
 }
 
-const authorDataSource = {
-  id: faker.string.uuid,
-  first_name: () => faker.person.firstName(),
-  last_name: () => faker.person.lastName()
-}
+const authorDataSource = () => ({
+  id: faker.string.uuid(),
+  first_name: faker.person.firstName(),
+  last_name: faker.person.lastName()
+})
 
 type Book = {
   id: string
@@ -32,12 +32,12 @@ type Book = {
   name: string
 }
 
-const bookDataSource = {
-  id: faker.string.uuid,
-  publisher_id: faker.string.uuid,
-  author_id: faker.string.uuid,
-  name: faker.company.buzzPhrase
-}
+const bookDataSource = () => ({
+  id: faker.string.uuid(),
+  publisher_id: faker.string.uuid(),
+  author_id: faker.string.uuid(),
+  name: faker.company.buzzPhrase()
+})
 
 // mocq config
 const dbLoad = {
@@ -66,10 +66,11 @@ const dbLoad = {
   } as MocQ<Book>,
 }
 
+const { execute: loadDB } = mocq(dbLoad)
 console.log('------- load db ---------')
 // pre load step
 console.log(`CREATE TABLE publisher (id char, name char);\nCREATE TABLE author (id char, first_name char, last_name char);\nCREATE TABLE book (id char, name char, author_id char, publisher_id char);`)
 // mocq executed
-const { data: { publishers, authors, books }} = await mocq(dbLoad).execute()
+const { data: { publishers, authors, books }} = await loadDB()
 // post load step
 console.log("done ✅")

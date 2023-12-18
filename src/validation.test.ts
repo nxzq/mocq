@@ -2,15 +2,15 @@ import { describe, expect, test } from 'bun:test'
 
 import { validate } from './validate'
 import { emphasisLogText } from './logger'
-import { MocQ, DataSource } from '.'
+import { MocQ } from '.'
 
 type Node = {
   name: string
 }
 
-const nodeDataSource: DataSource<Node> = {
-  name: (i) => `name_${i}`,
-}
+const generateNodeDataSource = (i: number): Node => ({
+  name: `name_${i}`,
+})
 
 describe('[validation]', () => {
   test("unordered config", () => {
@@ -23,7 +23,7 @@ describe('[validation]', () => {
 
     const mocqConfig: Config = {
       elements: {
-        generator: nodeDataSource,
+        generator: generateNodeDataSource,
           count: 100,
           connections: {
             users: (data: Node[])=>({ name: (i) => data[Math.floor(Math.random() * data.length)].name+i }),
@@ -31,14 +31,14 @@ describe('[validation]', () => {
           }
       },
       tags: {
-        generator: nodeDataSource,
+        generator: generateNodeDataSource,
           count: 25,
           connections: {
             users: (data: Node[])=>({ name: () => data[Math.floor(Math.random() * data.length)].name }),
           }
       },
       users: {
-        generator: nodeDataSource,
+        generator: generateNodeDataSource,
         count: 25
       },
     }
@@ -54,7 +54,7 @@ describe('[validation]', () => {
 
     const mocqConfig: Config = {
       elements: {
-        generator: nodeDataSource,
+        generator: generateNodeDataSource,
           count: 100,
           connections: {
             elements: (data: Node[])=>({ name: (i) => data[Math.floor(Math.random() * data.length)].name+i }),
@@ -78,21 +78,21 @@ describe('[validation]', () => {
 
     const mocqConfig: Config = {
       elements: {
-        generator: nodeDataSource,
+        generator: generateNodeDataSource,
           count: 100,
           connections: {
             tags: (data: Node[])=>({ name: () => [...new Set([data[Math.floor(Math.random() * data.length)], data[Math.floor(Math.random() * data.length)]])].map(x => x.name) }),
           }
       },
       tags: {
-        generator: nodeDataSource,
+        generator: generateNodeDataSource,
           count: 25,
           connections: {
             users: (data: Node[])=>({ name: () => data[Math.floor(Math.random() * data.length)].name }),
           }
       },
       users: {
-        generator: nodeDataSource,
+        generator: generateNodeDataSource,
         count: 25,
         connections: {
           elements: (data: Node[])=>({ name: () => data[Math.floor(Math.random() * data.length)].name }),
@@ -114,7 +114,7 @@ describe('[validation]', () => {
 
     const mocqConfig: Config = {
       elements: {
-        generator: nodeDataSource,
+        generator: generateNodeDataSource,
           count: 100,
           connections: {
             chesto: (data: Node[])=>({ name: (i) => data[Math.floor(Math.random() * data.length)].name+i }),
