@@ -1,6 +1,6 @@
-# mocq
+# 🧪 mocq
 
-🧪 data creation, connection & execution coordinator
+a framework for mock data creation, connection & execution coordination
 
 >  for test scaffolding, mock data generation, database loads, etc.
 

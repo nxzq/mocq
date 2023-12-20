@@ -1,4 +1,4 @@
-import { mocq, MocQ } from "mocq";
+import { mocq } from "mocq";
 import { faker } from "@faker-js/faker";
 
 // in this example we are creating a workflow to load a library sql database
@@ -21,18 +21,18 @@ type Book = {
   name: string
 }
 
-const publisherDataSource = () => ({
+const publisherDataSource = (): Publisher => ({
   id: faker.string.uuid(),
   name: faker.company.name()
 })
 
-const authorDataSource = () => ({
+const authorDataSource = (): Author => ({
   id: faker.string.uuid(),
   first_name: faker.person.firstName(),
   last_name: faker.person.lastName()
 })
 
-const bookDataSource = () => ({
+const bookDataSource = (): Book => ({
   id: faker.string.uuid(),
   publisher_id: faker.string.uuid(),
   author_id: faker.string.uuid(),
@@ -47,23 +47,23 @@ const dbLoad = {
     handler: (data: Publisher[]) => {
       data.forEach(x => console.log(`INSERT INTO publisher VALUES ('${x.id}', '${x.name}');`))
     },
-  } as MocQ<Publisher>,
+  },
   authors: {
     generator: authorDataSource,
     count: 5,
     handler: (data: Author[]) => {
         data.forEach(x => console.log(`INSERT INTO author VALUES ('${x.id}', '${x.first_name}', '${x.last_name}');`))
     },
-  } as MocQ<Author>,
+  },
   books: {
     generator: bookDataSource,
     count: 15,
     connections: {
-      publishers: (data: Publisher[])=>({ publisher_id: () => faker.helpers.arrayElement(data).id }),
-      authors: (data: Author[])=>({ author_id: () => faker.helpers.arrayElement(data).id }),
+      publishers: (i: number, data: Publisher[])=>({ publisher_id: faker.helpers.arrayElement(data).id }),
+      authors: (i: number, data: Author[])=>({ author_id: faker.helpers.arrayElement(data).id }),
     },
     handler: (data: Book[]) => console.log('(book count: ',data.length,')\n','sample book data: ',data[0])
-  } as MocQ<Book>,
+  } ,
 }
 
 const { execute: loadDB } = mocq(dbLoad)
