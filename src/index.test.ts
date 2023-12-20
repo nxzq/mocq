@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 
-import { mocq, MocQ, MockDataGenerator } from '.'
+import { mocq } from '.'
 
 describe('[mocq]', async () => {
   test("exports", () => {
@@ -27,32 +27,26 @@ describe('[mocq]', async () => {
     let availableTags: Tag[] = []
     let mockElementDataAccumulator: Element[] = []
   
-    const userDataSource: MockDataGenerator<User> = (i: number) => ({
+    const userDataSource = (i: number): User => ({
       alias: `alias_${i}`,
       first_name: `first_name_${i}`,
       last_name: `last_name_${i}`
     })
     
-    const tagDataSource: MockDataGenerator<Tag> = (i: number) => ({
+    const tagDataSource = (i: number): Tag => ({
       id: `t${`0000000000000${i}`.slice(-9)}`,
       name: `tag_name_${i}`,
       created_by: ''
     })
     
-    const elementDataSource: MockDataGenerator<Element> = (i: number) => ({
+    const elementDataSource = (i: number): Element => ({
       id: `e${`0000000000000${i}`.slice(-9)}`,
       name: `element_name_${i}`,
       tags: [],
       created_by: ''
     })
   
-    type dbLoadConfig = {
-      users: MocQ<User>
-      tags: MocQ<Tag>
-      elements: MocQ<Element>
-    }
-  
-    const dbLoadMocqConfig: dbLoadConfig = {
+    const dbLoadMocqConfig = {
       users: {
         generator: userDataSource,
         count: 25
@@ -61,9 +55,9 @@ describe('[mocq]', async () => {
         generator: tagDataSource,
           count: 25,
           connections: {
-            users: (data: User[])=>({ created_by: () => data[Math.floor(Math.random() * data.length)].alias }),
+            users: (index: number, data: User[])=>({ created_by: data[Math.floor(Math.random() * data.length)].alias }),
           },
-          handler: (data: Tag[]) => {
+          handler: async (data: Tag[]) => {
             availableTags = data
           },
       },
@@ -71,17 +65,24 @@ describe('[mocq]', async () => {
         generator: elementDataSource,
           count: 100,
           connections: {
-            users: (data: User[])=>({ created_by: (i) => data[Math.floor(Math.random() * data.length)].alias+i }),
-            tags: (data: Tag[])=>({ tags: () => [...new Set([data[Math.floor(Math.random() * data.length)], data[Math.floor(Math.random() * data.length)]])].map(x => x.id) }),
+            users: (index: number, data: User[])=>({ created_by: data[Math.floor(Math.random() * data.length)].alias }),
+            tags: (index: number, data: Tag[])=>({ tags: [...new Set([data[Math.floor(Math.random() * data.length)], data[Math.floor(Math.random() * data.length)]])].map(x => x.id) }),
           },
-          handler: (data: Element[]) => {
+          handler: async (data: Element[]) => {
             mockElementDataAccumulator = data;
           },
       },
     }
     
     const dbLoad = mocq(dbLoadMocqConfig)
-    const { data: { tags, elements } } = await dbLoad.execute()
+    const data = dbLoad.generate()
+    expect(data.users.length).toBe(25)
+    expect(data.tags.length).toBe(25)
+    expect(data.elements.length).toBe(100)
+    const { data: { tags, elements, users }} = await dbLoad.execute()
+    expect(users.length).toBe(25)
+    expect(tags.length).toBe(25)
+    expect(elements.length).toBe(100)
     expect(availableTags.sort()).toEqual(tags.sort())
     expect((mockElementDataAccumulator).sort()).toEqual(elements.sort())
   })
@@ -94,11 +95,7 @@ describe('[mocq]', async () => {
       name: `name_${i}`,
     })
 
-    type Config = {
-      elements: MocQ<Node>
-    }
-
-    const mocqConfig: Config = {
+    const mocqConfig = {
       elements: {
         generator: createNode,
           count: 100,

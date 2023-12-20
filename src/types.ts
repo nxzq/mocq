@@ -1,18 +1,18 @@
 export interface Config {
-  [key:string]: MocQ<object>
+  [key:string]: MocQ<any>
 }
 
-export type MocQ<T extends object> = {
+export type MocQ<T> = {
   generator: MockDataGenerator<T>
   count: number
   connections?: {
-    [key: string]: (data: any[]) => Overrides<T>
+    [key: string]: MockDataConnection<T>
   }
-  handler?: (data: any[]) => Promise<unknown | void> | unknown | void
+  handler?: MockDataHandler<T>
 }
 
 export type MockDataGenerator<T> = (index: number) => T
 
-export type Overrides<T> = Partial<{
-  [K in keyof T]: (index?: number) => unknown
-}>
+export type MockDataConnection<T> = (index: number, connectionKeyData: any[]) => Partial<T>
+
+export type MockDataHandler<T> = (data: T[]) => Promise<void> | void

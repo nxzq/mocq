@@ -10,7 +10,11 @@ const log = (...params: any): void => {
 type systemLogType = 'generation' | 'connection' | 'execution' | 'evaluation' | 'validation' 
 
 export const emphasisLogText = (text: string) => {
-  return `\x1b[1;37m${text}\x1b[0m`
+  return `\x1b[1;36m[${text}]\x1b[0m`
+}
+
+export const muteLogText = (text: string) => {
+  return `\x1b[0;30m[${text}]\x1b[0m`
 }
 
 export const mocqLogText = (text: string) => {
@@ -44,7 +48,7 @@ export const logger = {
     if (type === 'validation')
       log(prefix, '\x1b[0;30m[validating configuration]\x1b[0m', ...content)
   },
-  // warn: (content: any): void => {
-  //   console.warn(prefix, '\x1b[1;33m[WARNING]\x1b[0m', content)
-  // },
+  warn: (content: any): void => {
+    console.warn(prefix, '\x1b[1;33m[WARNING]\x1b[0m', content)
+  },
 }
