@@ -3,8 +3,7 @@
   "private": true,
   "workspaces": [
     "src",
-    "example",
-    "website"
+    "example"
   ],
   "scripts": {
     "docs": "cd website && bun run serve",
