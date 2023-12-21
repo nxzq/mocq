@@ -66,7 +66,7 @@ import { mocq } from 'mocq'
 
 const myCustomConfig = {
   myCustomKey: {
-    generator: // a function to create a generic myCustomKey node
+    generator: // a function to create a myCustomKey node
     count: // the number of myCustomKey nodes wanted
     connections?: // ability to hook into generated data from other keys in config
     handler?: // ability to execute async functions against myCustomKey data
