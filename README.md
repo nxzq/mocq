@@ -54,7 +54,7 @@ your role per `Data Type`:
 `mocq`'s role
 - validate configuration
 - determine wholistic execution order
-  - will throw error is cyclic connections are detected
+  - will throw error if cyclic connections are detected
 - return _sync function_ `generate` that generates data
 - return _async function_ `execute` that generates data and executes handler functions
 
