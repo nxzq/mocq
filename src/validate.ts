@@ -1,7 +1,7 @@
-import { logger, emphasisLogText, mocqLogText } from "./logger"
+import { logger, emphasisLogText, emphasisErrorText, mocqLogText } from './logger'
 import { Config } from "./types"
 
-export const validate = <T>(config: T extends Config ? T : Config) => {
+export const validate = <T>(config: T extends Config ? T : Config): Array<keyof typeof config> => {
   logger.info('validating config and determining execution order...')
   const configurationKeys = Object.keys(config) as Array<keyof typeof config>
   function orderByDependencies(arr: Array<keyof typeof config>) {
@@ -11,22 +11,23 @@ export const validate = <T>(config: T extends Config ? T : Config) => {
   
     function visit(key: keyof typeof config) {
       if (tempStack.has(key)) {
-        const message = `cyclic dependencies detected involving key ${emphasisLogText(String(key))}`
-        logger.error(`${message}\n\t↳ set ${mocqLogText('MOCQ_VERBOSE')} env variable to ${mocqLogText('true')} to help debug`)
-        throw new Error(message)
+        const message = (emphasisFn: (x: string) => string) => `cyclic dependencies detected involving key ${emphasisFn(String(key))}`
+        logger.error(`${message(emphasisLogText)}\n\t↳ set ${mocqLogText('MOCQ_VERBOSE')} env variable to ${mocqLogText('true')} to help debug`)
+        throw new Error(message(emphasisErrorText))
       }
   
       if (!visited.has(key)) {
         logger.system('validation', key)
         if (typeof config[key].generator !== 'function') {
-          const message = `generator for key ${emphasisLogText(String(key))} must be a function`
-          logger.error(message)
-          throw new Error(message)
+          const message = (emphasisFn: (x: string) => string) => `generator for key ${emphasisFn(String(key))} must be a function`
+          logger.error(message(emphasisLogText))
+          throw new Error(message(emphasisErrorText))
         }
-        if (typeof config[key].generator(0) !== 'object') {
-          const message = `generator for key ${emphasisLogText(String(key))} must return an object`
-          logger.error(message)
-          throw new Error(message)
+        const sampleGeneratorReturn = config[key].generator(0)
+        if (typeof sampleGeneratorReturn !== 'object') {
+          const message = (emphasisFn: (x: string) => string) => `generator for key ${emphasisFn(String(key))} must return an object`
+          logger.error(message(emphasisLogText))
+          throw new Error(message(emphasisErrorText))
         }
         tempStack.add(key)
         if (config[key].connections !== undefined) {
@@ -34,21 +35,27 @@ export const validate = <T>(config: T extends Config ? T : Config) => {
             logger.system('evaluation', `${connectionKey} ➜ ${String(key)}`)
             const dependency = arr.find(key => key === connectionKey)
             if (connectionKey === key) {
-              const message = `key ${emphasisLogText(connectionKey)} cannot reference itself in connections`
-              logger.error(message)
-              throw new Error(message) 
+              const message = (emphasisFn: (x: string) => string) => `key ${emphasisFn(connectionKey)} cannot reference itself in connections`
+              logger.error(message(emphasisLogText))
+              throw new Error(message(emphasisErrorText)) 
             }
             if (typeof config[key].connections![connectionKey] !== 'function') {
-              const message = `${emphasisLogText(String(key))} connection key ${emphasisLogText(String(connectionKey))} must be a function`
-              logger.error(message)
-              throw new Error(message)
+              const message = (emphasisFn: (x: string) => string) => `${emphasisFn(String(key))} connection key ${emphasisFn(String(connectionKey))} must be a function`
+              logger.error(message(emphasisLogText))
+              throw new Error(message(emphasisErrorText))
+            }
+            const sampleConnectionReturn = config[key].connections![connectionKey](0, [config[key].generator(0)])
+            if (typeof sampleConnectionReturn !== 'object') {
+              const message = (emphasisFn: (x: string) => string) => `${emphasisFn(String(key))} connection key ${emphasisFn(String(connectionKey))} must return an object`
+              logger.error(message(emphasisLogText))
+              throw new Error(message(emphasisErrorText))
             }
             if (dependency) {
               visit(dependency)
             } else {
-              const message = `connection key ${emphasisLogText(connectionKey)} is not present in config but referenced in ${emphasisLogText(String(key))}`
-              logger.error(message)
-              throw new Error(message)
+              const message = (emphasisFn: (x: string) => string) => `connection key ${emphasisFn(connectionKey)} is not present in config but referenced in ${emphasisFn(String(key))}`
+              logger.error(message(emphasisLogText))
+              throw new Error(message(emphasisErrorText))
             }
           })
         }

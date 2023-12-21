@@ -1,5 +1,5 @@
 export interface Config {
-  [key:string]: MocQ<any>
+  [key:string]: MocQ<object>
 }
 
 export type MocQ<T> = {
@@ -8,11 +8,11 @@ export type MocQ<T> = {
   connections?: {
     [key: string]: MockDataConnection<T>
   }
-  handler?: MockDataHandler<T>
+  handler?: MockDataHandler
 }
 
 export type MockDataGenerator<T> = (index: number) => T
 
 export type MockDataConnection<T> = (index: number, connectionKeyData: any[]) => Partial<T>
 
-export type MockDataHandler<T> = (data: T[]) => Promise<void> | void
+export type MockDataHandler = (data: any[]) => Promise<void> | void

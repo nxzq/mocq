@@ -4,11 +4,5 @@
   "workspaces": [
     "src",
     "example"
-  ],
-  "scripts": {
-    "docs": "cd website && bun run serve",
-    "docs:build": "cd website && bun run build",
-    "docs:dev": "cd website && bun start",
-    "test": "cd src && bun test --coverage"
-  }
+  ]
 }

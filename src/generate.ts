@@ -1,10 +1,11 @@
-import { logger, emphasisLogText, muteLogText } from './logger'
+import { logger, emphasisLogText, emphasisErrorText, muteLogText } from './logger'
 import { Config } from "./types";
 
 export const generate = <T extends Config>(
   config: T,
   executionOrder: Array<keyof typeof config>
 ): { [K in keyof T]: ReturnType<T[K]['generator']>[] } => {
+  logger.info('data generation init...')
   const result: { [K in keyof T]: ReturnType<T[K]['generator']>[] } = {} as any
 
   for(const key of executionOrder) {
@@ -16,9 +17,9 @@ export const generate = <T extends Config>(
   for(let i = 0; i < count; i++) {
     const generatedData = generator(i);
     if (typeof generatedData !== 'object') {
-      const message = `generator for key ${emphasisLogText(String(key))} must return an object`
-      logger.error(message)
-      throw new Error(message)
+      const message = (emphasisFn: (x: string) => string) => `generator for key ${emphasisFn(String(key))} must return an object`
+      logger.error(message(emphasisLogText))
+      throw new Error(message(emphasisErrorText))
     }
 
     if (connections) {
@@ -31,9 +32,9 @@ export const generate = <T extends Config>(
           const connectionFn = connections[connectionKey]
           const connectionData = connectionFn(i, result[connectionKey as keyof T])
           if (typeof connectionData !== 'object') {
-            const message = `connection key ${emphasisLogText(String(connectionKey))} in ${emphasisLogText(String(key))} must return an object`
-            logger.error(message)
-            throw new Error(message)
+            const message = (emphasisFn: (x: string) => string) => `${emphasisFn(String(key))} connection key ${emphasisFn(String(connectionKey))} must return an object`
+            logger.error(message(emphasisLogText))
+            throw new Error(message(emphasisErrorText))
           }
           mergedData = { ...mergedData, ...connectionData } as ReturnType<T[typeof key]['generator']>
         }

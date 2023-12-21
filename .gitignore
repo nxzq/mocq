@@ -1,6 +1,12 @@
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
-website/
+
+# dupe for npm page
+
 src/README.md
+
+# docs
+website
+
 # Logs
 
 logs

@@ -6,11 +6,14 @@ const log = (...params: any): void => {
   }
 }
 
-
 type systemLogType = 'generation' | 'connection' | 'execution' | 'evaluation' | 'validation' 
 
 export const emphasisLogText = (text: string) => {
-  return `\x1b[1;36m[${text}]\x1b[0m`
+  return `\x1b[1;36m"${text}"\x1b[0m`
+}
+
+export const emphasisErrorText = (text: string) => {
+  return `"${text}"`
 }
 
 export const muteLogText = (text: string) => {
@@ -18,10 +21,10 @@ export const muteLogText = (text: string) => {
 }
 
 export const mocqLogText = (text: string) => {
-  return `\x1b[0;36m${text}\x1b[0m`
+  return `\x1b[;36m${text}\x1b[0m`
 }
 
-const prefix = mocqLogText('mocq')
+const prefix = mocqLogText('[mocq]')
 
 export const logger = {
   info: (content: string): void => {
@@ -49,6 +52,6 @@ export const logger = {
       log(prefix, '\x1b[0;30m[validating configuration]\x1b[0m', ...content)
   },
   warn: (content: any): void => {
-    console.warn(prefix, '\x1b[1;33m[WARNING]\x1b[0m', content)
+    console.warn(prefix, '\x1b[0;33m[WARNING]\x1b[0m', content)
   },
 }

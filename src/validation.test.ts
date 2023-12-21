@@ -1,8 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 
 import { validate } from './validate'
-import { emphasisLogText } from './logger'
-import { Config, MocQ } from './types'
+import { emphasisErrorText } from './logger'
 
 type Node = {
   name: string
@@ -53,7 +52,7 @@ describe('[validation]', () => {
     try {
       validate(mocqConfig)
     } catch (e: Error | any) {
-      expect(e?.message).toBe(`key ${emphasisLogText('elements')} cannot reference itself in connections`)
+      expect(e?.message).toBe(`key ${emphasisErrorText('elements')} cannot reference itself in connections`)
     }
   })
   test("cyclic connections config", () => {
@@ -84,7 +83,7 @@ describe('[validation]', () => {
     try {
       validate(mocqConfig)
     } catch (e: Error | any) {
-      expect(e?.message).toBe(`cyclic dependencies detected involving key ${emphasisLogText('elements')}`)
+      expect(e?.message).toBe(`cyclic dependencies detected involving key ${emphasisErrorText('elements')}`)
     }
   })
   test("undefined/missing connection config", () => {
@@ -101,7 +100,7 @@ describe('[validation]', () => {
     try {
       validate(mocqConfig)
     } catch (e: Error | any) {
-      expect(e?.message).toBe(`connection key ${emphasisLogText('chesto')} is not present in config but referenced in ${emphasisLogText('elements')}`)
+      expect(e?.message).toBe(`connection key ${emphasisErrorText('chesto')} is not present in config but referenced in ${emphasisErrorText('elements')}`)
     }
   })
   test("generator not a function", () => {
@@ -116,7 +115,7 @@ describe('[validation]', () => {
       // @ts-expect-error
       validate(mocqConfig)
     } catch (e: Error | any) {
-      expect(e?.message).toBe(`generator for key ${emphasisLogText('elements')} must be a function`)
+      expect(e?.message).toBe(`generator for key ${emphasisErrorText('elements')} must be a function`)
     }
   })
   test("generator not a returning object", () => {
@@ -128,9 +127,10 @@ describe('[validation]', () => {
     }
     
     try {
+      // @ts-expect-error
       validate(mocqConfig)
     } catch (e: Error | any) {
-      expect(e?.message).toBe(`generator for key ${emphasisLogText('elements')} must return an object`)
+      expect(e?.message).toBe(`generator for key ${emphasisErrorText('elements')} must return an object`)
     }
   })
   test("connection not a function", () => {
@@ -152,7 +152,29 @@ describe('[validation]', () => {
       // @ts-expect-error
       validate(mocqConfig)
     } catch (e: Error | any) {
-      expect(e?.message).toBe(`${emphasisLogText('node')} connection key ${emphasisLogText('elements')} must be a function`)
+      expect(e?.message).toBe(`${emphasisErrorText('node')} connection key ${emphasisErrorText('elements')} must be a function`)
+    }
+  })
+  test("connection not a returning object", () => {
+    const mocqConfig = {
+      elements: {
+        generator: generateNodeDataSource,
+          count: 100,
+      },
+      node: {
+        generator: generateNodeDataSource,
+          count: 100,
+          connections: {
+            elements: () => 'elements'
+          }
+      }
+    }
+    
+    try {
+      // @ts-expect-error
+      validate(mocqConfig)
+    } catch (e: Error | any) {
+      expect(e?.message).toBe(`${emphasisErrorText('node')} connection key ${emphasisErrorText('elements')} must return an object`)
     }
   })
 })
