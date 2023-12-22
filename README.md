@@ -68,8 +68,8 @@ const myCustomConfig = {
   myCustomKey: {
     generator: // a function to create a myCustomKey node
     count: // the number of myCustomKey nodes wanted
-    connections?: // ability to hook into generated data from other keys in config
-    handler?: // ability to execute async functions against myCustomKey data
+    connections?: // ability to hook into returned data from other keys in config
+    handler?: // ability to execute async functions against myCustomKey returned data
   },
   myCustomKey2: { ... },
   ...
@@ -133,9 +133,21 @@ const config = {
   }
 }
 ```
-here I am just grabbing a random `id` and assigning
+here I am just grabbing a random `id` and assigning the value to `created_by`
 
 > notice how the key name in connections `users` matches the top level `users`
+
+connection function returns are spread over generated data as so:
+
+```ts
+{
+  ...generatorFnReturn,
+  ...connectionFn1Return,
+  ...connectionFnxReturn,
+}
+```
+
+at the time a connection fires, the parent data source will have it's generator and all connections executed as return data, which enables connection chaining
 
 ### Handler
 
@@ -155,11 +167,11 @@ const config = {
 
 ## Example
 
-checkout this [example](https://github.com/nxzq/mocq/blob/main/example/sql-data-load.ts) using faker-js
+checkout this [SQL datbase load example](https://github.com/nxzq/mocq/blob/main/example/sql-data-load.ts) using faker-js
 
 ## Strict Type Checking (TypeScript)
 
-`mocq` will attempt to infer a key's type based on the return type of the generator function, however for the most robust type checking type your config as follows.
+`mocq` will attempt to infer a key's type based on the return type of the generator function, however for the most robust type checking type your config as follows:
 
 ```ts
 import { mocq, MocQ } = 'mocq'
