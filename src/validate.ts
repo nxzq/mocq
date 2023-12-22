@@ -8,14 +8,13 @@ export const validate = <T>(config: T extends Config ? T : Config): Array<keyof 
     const visited = new Set()
     const sorted = [] as Array<keyof typeof config>
     const tempStack = new Set()
-  
+
     function visit(key: keyof typeof config) {
       if (tempStack.has(key)) {
         const message = (emphasisFn: (x: string) => string) => `cyclic dependencies detected involving key ${emphasisFn(String(key))}`
         logger.error(`${message(emphasisLogText)}\n\t↳ set ${mocqLogText('MOCQ_VERBOSE')} env variable to ${mocqLogText('true')} to help debug`)
         throw new Error(message(emphasisErrorText))
       }
-  
       if (!visited.has(key)) {
         logger.system('validation', key)
         if (typeof config[key].generator !== 'function') {
@@ -64,11 +63,9 @@ export const validate = <T>(config: T extends Config ? T : Config): Array<keyof 
         tempStack.delete(key)
       }
     }
-  
     arr.forEach(key => {
       visit(key)
     })
-
     return sorted
   }
   const keys = orderByDependencies(configurationKeys)
