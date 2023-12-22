@@ -45,13 +45,13 @@ first you'll need to encapsulate your data into some `Data Types`
 
 from this point on you will be considering each of these `Data Types` in isolation
 
-your role per `Data Type`:
+🧑‍💻 your role per `Data Type`:
 - provide [generator](#generator) function that create a single instance of a `Data Type`
 - provide the number of instances desired as [count](#count)
 - provide optional [connection](#connection) functions that hook into other `Data Types` in your config (from any given `Data Type`, you are only concerned with the immediate parent)
 - provide optional [handler](#handler) functions to do something with the generated data (write to db, execute api call, etc.)
 
-`mocq`'s role
+🤖 `mocq`'s role
 - validate configuration
 - determine wholistic execution order
   - will throw error if cyclic connections are detected
