@@ -92,7 +92,7 @@ a _function_ that creates a single instance of a data key type
 
 this is whatever you want it to be so you can use popular mocking libraries like [faker-js](https://www.npmjs.com/package/@faker-js/faker) and [zod-mock](https://www.npmjs.com/package/@anatine/zod-mock) to  create your mock data
 
-> hint: adding a return type to this function will improve intellisense on result
+> typescript hint: adding a return type to this function will improve intellisense on result
 
 ### Count
 
@@ -104,8 +104,8 @@ the _number_ of data key nodes to be created
 
 `optional`
 
-optional _key-function pairs_ that hook into other data keys in your config 
-> from any given data type, you are only concerned with the immediate parent lightening the mental relationship load
+optional _key-function pairs_ that hook into the returned data from other data keys in your config 
+> from any given data type, you are only concerned with the immediate parent, lightening the mental relationship load
 
 for example we have 2 types `User` and `Node`
 
