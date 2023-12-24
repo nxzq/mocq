@@ -2,7 +2,7 @@
 
 a framework for mock data creation, connection & execution coordination
 
->  for test scaffolding, mock data generation, database loads, etc.
+>  for programmatic creation of traversable data sets, test scaffolding, mock data generation, database loads, etc.
 
 ## Install
 
@@ -26,15 +26,13 @@ bun add --dev mocq
 
 ## Basic Concepts
 
-There's no getting around it, your data is going to have relationships.
+> There's no getting around it, your data is going to have relationships.
 
-> `mocq` aims to make those relationships more manageable and extendable when creating and extending test scaffolding. Simply define how to make your `Data Types`, how they connect & what to do with the data once its generated. `mocq` will determine the wholistic execution order so from a DX perspective you are only concerned with a given `Data Type` and it's immediate parents in any context.
+`mocq` aims to make those relationships more manageable and extendable.
 
-first you'll need to encapsulate your data into some `Data Types`
- 
-> you've probably already made these decisions somewhere along the way, typescript types, maybe your sql tables if you're in that world or graphql types or graph nodes anything works
+Simply define how to make your `Data Objects`, how they connect to each other & what to do with the data once its generated. `mocq` will determine the wholistic execution order so from a DX perspective you are only concerned with a given `Data Object` and it's immediate parents in any context.
 
-`mocq` takes a config object where each `Data Type` corresponds to a key you define
+`mocq` takes a config object where each `Data Object` corresponds to a key you define
 
 ```ts
 {
@@ -43,12 +41,12 @@ first you'll need to encapsulate your data into some `Data Types`
 }
 ```
 
-from this point on you will be considering each of these `Data Types` in isolation
+from this point on you will be considering each of these `Data Objects` in isolation
 
-🧑‍💻 your role per `Data Type`:
-- provide [generator](#generator) function that create a single instance of a `Data Type`
+🧑‍💻 your role per `Data Object`:
+- provide [generator](#generator) function that create a single instance of a `Data Object`
 - provide the number of instances desired as [count](#count)
-- provide optional [connection](#connection) functions that hook into other `Data Types` in your config (from any given `Data Type`, you are only concerned with the immediate parent)
+- provide optional [connection](#connection) functions that hook into other `Data Objects` in your config (from any given `Data Object`, you are only concerned with the immediate parent)
 - provide optional [handler](#handler) functions to do something with the generated data (write to db, execute api call, etc.)
 
 🤖 `mocq`'s role
@@ -58,8 +56,11 @@ from this point on you will be considering each of these `Data Types` in isolati
 - return _sync function_ `generate` that generates data
 - return _async function_ `execute` that generates data and executes handler functions
 
+## Example
 
-### Configuration
+checkout this [SQL datbase load example](https://github.com/nxzq/mocq/blob/main/example/sql-data-load.ts) using faker-js
+
+## Configuration
 
 ```ts
 import { mocq } from 'mocq'
@@ -80,6 +81,8 @@ const { generate, execute } = mocq(myCustomConfig)
 
 ### Generator
 
+`required`
+
 a _function_ that creates a single instance of a data key type
 > it will be passed an index number, use if you need uniqueness
 
@@ -93,9 +96,13 @@ this is whatever you want it to be so you can use popular mocking libraries like
 
 ### Count
 
+`required`
+
 the _number_ of data key nodes to be created
 
 ### Connections
+
+`optional`
 
 optional _key-function pairs_ that hook into other data keys in your config 
 > from any given data type, you are only concerned with the immediate parent lightening the mental relationship load
@@ -115,8 +122,9 @@ type Node = {
 while generating my mock data I want `Node` type `createdBy` field to be populated with some user id from the users I just created
 ```ts
 const userCreatedNodeConnection = (i: number: data: User[]): Partial<Node> => {
+  const randomIndex = Math.floor(Math.random() * data.length)
   return {
-    createdBy: data[Math.floor(Math.random() * data.length)].id
+    createdBy: data[randomIndex].id
     }
 }
 const config = {
@@ -151,6 +159,8 @@ at the time a connection fires, the parent data source will have it's generator 
 
 ### Handler
 
+`optional`
+
 optional _async function_ to be run against generated & connected data when invoking the `execute` function
 
 > use to write to db, execute api call, etc.
@@ -164,10 +174,6 @@ const config = {
   },
 }
 ```
-
-## Example
-
-checkout this [SQL datbase load example](https://github.com/nxzq/mocq/blob/main/example/sql-data-load.ts) using faker-js
 
 ## Strict Type Checking (TypeScript)
 
