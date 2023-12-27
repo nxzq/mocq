@@ -1,0 +1,24 @@
+name: test
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: oven-sh/setup-bun@v1
+      - name: Install 🚀
+        run: |
+          bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline
+      - name: Test 🧪
+        run: |
+          cd src
+          bun test --coverage
+      - name: Example 🧑‍🏫
+        run: |
+          cd example
+          echo "example mocq usage: https://github.com/nxzq/mocq/blob/main/example/sql-data-load.ts"
+          MOCQ_VERBOSE=true bun sql-data-load.ts
