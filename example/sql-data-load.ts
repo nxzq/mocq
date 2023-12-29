@@ -21,7 +21,7 @@ class Logger {
   }
   log(...message: any[]) {
     this.logs.push(message);
-    console.log('sql-logger: ', ...message);
+    console.log('\x1b[1;34m[SQL]\x1b[0m', ...message);
   }
 }
 
@@ -108,14 +108,19 @@ const dbLoad: DbLoadConfig = {
   },
 }
 
-const { execute: loadDB } = mocq(dbLoad)
-const logger = new Logger();
+const { execute } = mocq(dbLoad)
 
 /* database load */
+const loadDataBaseWithPseudoRandomData = async () => {
+  // pre load step
+  const logger = new Logger();
+  logger.log(`CREATE TABLE publisher (id char, name char);`)
+  logger.log(`CREATE TABLE author (id char, first_name char, last_name char);`)
+  logger.log(`CREATE TABLE book (id char, name char, author_id char, publisher_id char);`)
+  // mocq executed
+  const { data: { publishers, authors, books }} = await execute()
+  // post load step
+  logger.log("done ✅")
+}
 
-// pre load step
-logger.log(`CREATE TABLE publisher (id char, name char);\nCREATE TABLE author (id char, first_name char, last_name char);\nCREATE TABLE book (id char, name char, author_id char, publisher_id char);`)
-// mocq executed
-const { data: { publishers, authors, books }} = await loadDB()
-// post load step
-logger.log("done ✅")
+await loadDataBaseWithPseudoRandomData()
