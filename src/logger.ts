@@ -17,7 +17,7 @@ export const emphasisErrorText = (text: string) => {
 }
 
 export const muteLogText = (text: string) => {
-  return `\x1b[1;30m[${text}]\x1b[0m`
+  return `\x1b[38;5m[${text}]\x1b[0m`
 }
 
 export const mocqLogText = (text: string) => {
@@ -43,7 +43,7 @@ export const logger = {
     if (type === 'connection')
       log(prefix, '\x1b[0;34m[connecting mock data]\x1b[0m', ...content)
     if (type === 'evaluation')
-      log(prefix, '\x1b[1;30m[evaluating connection]\x1b[0m', ...content)
+      log(prefix, '\x1b[38;5mm[evaluating connection]\x1b[0m', ...content)
     if (type === 'execution')
       log(prefix, '\x1b[0;35m[executing mock data handler]\x1b[0m', ...content)
     if (type === 'generation')
