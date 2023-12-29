@@ -17,7 +17,7 @@ export const emphasisErrorText = (text: string) => {
 }
 
 export const muteLogText = (text: string) => {
-  return `\x1b[38;5m[${text}]\x1b[0m`
+  return `\x1b[1;37m[${text}]\x1b[0m`
 }
 
 export const mocqLogText = (text: string) => {
@@ -43,13 +43,13 @@ export const logger = {
     if (type === 'connection')
       log(prefix, '\x1b[0;34m[connecting mock data]\x1b[0m', ...content)
     if (type === 'evaluation')
-      log(prefix, '\x1b[38;5mm[evaluating connection]\x1b[0m', ...content)
+      log(prefix, '\x1b[38;5;75m[evaluating connection]\x1b[0m', ...content)
     if (type === 'execution')
       log(prefix, '\x1b[0;35m[executing mock data handler]\x1b[0m', ...content)
     if (type === 'generation')
       log(prefix, '\x1b[0;32m[generating mock data]\x1b[0m', ...content)
     if (type === 'validation')
-      log(prefix, '\x1b[0;30m[validating configuration]\x1b[0m', ...content)
+      log(prefix, '\x1b[38;5;72m[validating configuration]\x1b[0m', ...content)
   },
   warn: (content: any): void => {
     console.warn(prefix, '\x1b[0;33m[WARNING]\x1b[0m', content)
