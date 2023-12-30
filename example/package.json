@@ -4,13 +4,13 @@
     "example:sql": "bun sql-data-load.ts"
   },
   "devDependencies": {
-    "bun-types": "latest",
-    "mocq": "workspace:*"
+    "bun-types": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.3.1"
+    "@faker-js/faker": "^8.3.1",
+    "mocq": "workspace:*"
   }
 }
