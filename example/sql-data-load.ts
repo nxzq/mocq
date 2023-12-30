@@ -110,7 +110,7 @@ const dbLoad = async (dbConnection: DbConnection) => {
         authors: (i: number, data: Author[])=>({ author_id: faker.helpers.arrayElement(data).id }),
       },
       handler: (data: Book[]) => {
-        data.forEach(x => dbConnection.log(`INSERT INTO books VALUES ('${x.id}', '${x.name}', \n\t'${x.publisher_id}', '${x.author_id}');`))
+        data.forEach(x => dbConnection.log(`INSERT INTO books VALUES ('${x.id}', '${x.name}', \n\t↳'${x.publisher_id}', '${x.author_id}');`))
       }
     },
   }
