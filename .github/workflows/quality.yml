@@ -13,6 +13,17 @@ jobs:
       - name: Install 🚀
         run: |
           bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline
+  build:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - uses: actions/checkout@v3
+      - uses: oven-sh/setup-bun@v1
+      - name: Build 📦
+        run: |
+          cd src
+          bun run build
+          cd -
   test:
     runs-on: ubuntu-latest
     needs: install
@@ -23,9 +34,10 @@ jobs:
         run: |
           cd src
           bun test --coverage
+          cd -
   example:
     runs-on: ubuntu-latest
-    needs: install
+    needs: build
     steps:
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v1
@@ -34,3 +46,4 @@ jobs:
           cd example
           echo "example mocq usage: https://github.com/nxzq/mocq/blob/main/example/sql-data-load.ts"
           MOCQ_VERBOSE=true bun sql-data-load.ts
+          cd -
