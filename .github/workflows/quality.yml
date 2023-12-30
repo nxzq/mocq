@@ -34,4 +34,9 @@ jobs:
         run: |
           cd example
           echo "code: https://github.com/nxzq/mocq/blob/main/example/sql-data-load.ts"
+          bun run example:sql
+      - name: SQL DB Load Example Verbose 🧑‍🏫
+        run: |
+          cd example
+          echo "code: https://github.com/nxzq/mocq/blob/main/example/sql-data-load.ts"
           MOCQ_VERBOSE=true bun run example:sql
