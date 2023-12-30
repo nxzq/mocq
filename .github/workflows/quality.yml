@@ -13,12 +13,6 @@ jobs:
       - name: Install 🚀
         run: |
           bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline
-  build:
-    runs-on: ubuntu-latest
-    needs: install
-    steps:
-      - uses: actions/checkout@v3
-      - uses: oven-sh/setup-bun@v1
       - name: Build 📦
         run: |
           cd src
@@ -33,11 +27,12 @@ jobs:
       - name: Test 🧪
         run: |
           cd src
+          rm -rf dist
           bun test --coverage
           cd -
   example:
     runs-on: ubuntu-latest
-    needs: build
+    needs: install
     steps:
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v1
