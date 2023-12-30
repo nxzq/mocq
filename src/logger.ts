@@ -43,7 +43,7 @@ export const logger = {
     if (type === 'connection')
       log(prefix, '\x1b[0;34m[connecting mock data]\x1b[0m', ...content)
     if (type === 'evaluation')
-      log(prefix, '\x1b[1;34m[evaluating connection]\x1b[0m', ...content)
+      log(prefix, '[evaluating connection]', ...content)
     if (type === 'execution')
       log(prefix, '\x1b[0;35m[executing mock data handler]\x1b[0m', ...content)
     if (type === 'generation')
