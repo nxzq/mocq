@@ -1,0 +1,278 @@
+---
+sidebar_position: 1
+title: "Basic Usage"
+description: "basic usage use-case"
+---
+
+## Getting Started
+
+For this example we have three types `Users`, `Tags` and `Elements`
+
+- `Tags` and `Elements` are both created_by `Users`
+- `Elements` include a list of `Tags` 
+
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CodeBlock from '@theme/CodeBlock';
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    <CodeBlock language="ts">
+{`type User = {
+  alias: string
+  first_name: string
+  last_name: string
+};
+type Tag = {
+  id: string
+  name: string
+  created_by: string
+};
+type Element = {
+  id: string
+  name: string
+  tags: Tag[]
+  created_by: string
+};`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    <CodeBlock
+      language="ts"
+      title="/types.ts"
+      showLineNumbers>
+{`export type User = {
+  alias: string
+  first_name: string
+  last_name: string
+};
+export type Tag = {
+  id: string
+  name: string
+  created_by: string
+};
+export type Element = {
+  id: string
+  name: string
+  tags: Tag[]
+  created_by: string
+};`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+## Generating Data
+
+Here are our base data generators
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    <CodeBlock language="js"
+      title="/generators.js"
+      showLineNumbers>
+{`export const generateMockUser = (i) => ({
+  alias: \`alias_\${i}\`,
+  first_name: \`first_name_\${i}\`,
+  last_name: \`last_name_\${i}\`
+});
+
+export const generateMockTag = (i) => ({
+  id: \`t\${\`0000000000000\${i}\`.slice(-9)}\`,
+  name: \`tag_name_\${i}\`,
+  created_by: 'unknown'
+});
+
+export const generateMockElement = (i) => ({
+  id: \`e\${\`0000000000000\${i}\`.slice(-9)}\`,
+  name: \`element_name_\${i}\`,
+  tags: [],
+  created_by: 'unknown'
+});`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    <CodeBlock
+      language="ts"
+      title="/generators.ts"
+      showLineNumbers>
+{`import { User, Tag, Element } from './types';
+
+export function generateMockUser(i: number): User {
+  return {
+    alias: \`alias_\${i}\`,
+    first_name: \`first_name_\${i}\`,
+    last_name: \`last_name_\${i}\`,
+  };
+});
+
+export function generateMockTag(i: number): Tag {
+  return {
+    id: \`t\${\`0000000000000\${i}\`.slice(-9)}\`,
+    name: \`tag_name_\${i}\`,
+    created_by: 'unknown',
+  };
+});
+
+export function generateMockElement(i: number): Element {
+  return {
+    id: \`e\${\`0000000000000\${i}\`.slice(-9)}\`,
+    name: \`element_name_\${i}\`,
+    tags: [],
+    created_by: 'unknown'
+  };
+};`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+## Connecting Data
+
+We don't really care how our data is connected just that it is in some way, a great time for randomness
+
+> we will use this helper functions to grab a random element out of an array
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    <CodeBlock language="js"
+      title="/utils.js"
+      showLineNumbers>
+{`export const getRandomArrElement = (data) => {
+  return data[Math.floor(Math.random() * data.length)]
+};
+
+export const getRandomArrElements = (data, maxCount) => {
+  return [...new Set(...new Array(maxCount).map(() => getRandomArrElement(data)))]
+};`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    <CodeBlock
+      language="ts"
+      title="/utils.ts"
+      showLineNumbers>
+{`export function getRandomArrElement(data: any[]) {
+  return data[Math.floor(Math.random() * data.length)]
+};
+
+export function getRandomArrElements<T extends any>(data: T[], maxCount: number): T[] {
+  return [...new Set(...new Array(maxCount).map(() => getRandomArrElement(data)))] as T[]
+};`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+## Configuration
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    <CodeBlock language="js"
+      title="/index.js"
+      showLineNumbers>
+{`import { mocq } from "mocq";
+import { generateMockUser, generateMockTag, generateMockElement } from './generators';
+import { getRandomArrElement, getRandomArrElements } from './utils';
+
+const { generate } = mocq({
+  users: {
+    generator: generateMockUser,
+    count: 25
+  },
+  tags: {
+    generator: generateMockTag,
+      count: 25,
+      connections: {
+        users: (index, users)=>({ created_by: getRandomArrElement(users).alias }),
+      }
+  },
+  elements: {
+    generator: generateMockElement,
+      count: 100,
+      connections: {
+        users: (index: number, users)=>({ created_by: getRandomArrElement(users).alias }),
+        tags: (index: number, tags)=>({ tags: getRandomArrElements(tags, 2).map(x => x.id) }),
+      }
+  },
+});
+
+const { data: { users, tags, elements} } = generate();`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    <CodeBlock
+      language="ts"
+      title="/index.ts"
+      showLineNumbers>
+{`import { mocq, MocQ } from "mocq";
+import { User, Tag, Element } from './types';
+import { generateMockUser, generateMockTag, generateMockElement } from './generators';
+import { getRandomArrElement, getRandomArrElements } from './utils';
+
+const { generate } = mocq({
+  users: {
+    generator: generateMockUser,
+    count: 25
+  } as MocQ<User>,
+  tags: {
+    generator: generateMockTag,
+      count: 25,
+      connections: {
+        users: (index: number, data: User[])=>({ created_by: getRandomArrElement(data).alias }),
+      },
+  } as MocQ<Tag>,
+  elements: {
+    generator: generateMockElement,
+      count: 100,
+      connections: {
+        users: (index: number, data: User[])=>({ created_by: getRandomArrElement(data).alias }),
+        tags: (index: number, data: Tag[])=>({ tags: getRandomArrElements(data, 2).map(x => x.id) }),
+      }
+  } as MocQ<Element>,
+});
+
+const { data: { users, tags, elements} } = generate();`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+<details>
+<summary>
+Sample Resolved Data
+</summary>
+`users`: 
+```js
+[
+  {
+    alias: "alias_0",
+    first_name: "first_name_0",
+    last_name: "last_name_0"
+  },
+  // ... 24 more entries
+]
+```
+
+`tags`: 
+```js
+[
+  {
+    id: "t000000000",
+    name: "tag_name_0",
+    created_by: "alias_1"
+  },
+  // ... 24 more entries
+]
+```
+
+`elements`: 
+```js
+[
+  {
+    id: "e000000099",
+    name: "element_name_99",
+    tags: [ "t000000001", "t000000000" ],
+    created_by: "alias_21"
+  },
+  // ... 99 more entries
+]
+```
+</details>

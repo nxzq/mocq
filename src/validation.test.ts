@@ -103,6 +103,20 @@ describe('[validation]', () => {
       expect(e?.message).toBe(`connection key ${emphasisErrorText('chesto')} is not present in config but referenced in ${emphasisErrorText('elements')}`)
     }
   })
+  test("count not greater than zero", () => {
+    const mocqConfig = {
+      elements: {
+        generator: generateNodeDataSource,
+          count: 0,
+      }
+    }
+    
+    try {
+      validate(mocqConfig)
+    } catch (e: Error | any) {
+      expect(e?.message).toBe(`count for key ${emphasisErrorText('elements')} must be a number greater than zero (0)`)
+    }
+  })
   test("generator not a function", () => {
     const mocqConfig = {
       elements: {

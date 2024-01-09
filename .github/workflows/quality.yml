@@ -22,7 +22,6 @@ jobs:
       - name: 🧪 Unit Test
         run: |
           cd src
-          rm -rf dist
           bun test --coverage
   examples:
     runs-on: ubuntu-latest
@@ -30,13 +29,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v1
+      - name: 🧑‍🏫 Basic Usage Example
+        run: |
+          cd example
+          echo "code: https://github.com/nxzq/mocq/blob/main/example/basic.ts"
+          bun run example:basic
       - name: 🧑‍🏫 SQL DB Load Example
         run: |
           cd example
           echo "code: https://github.com/nxzq/mocq/blob/main/example/sql-data-load.ts"
           bun run example:sql
-      - name: 🧑‍🏫 SQL DB Load Example [verbose]
+      - name: 🧑‍🏫 faker-js Example
         run: |
           cd example
-          echo "code: https://github.com/nxzq/mocq/blob/main/example/sql-data-load.ts"
-          MOCQ_VERBOSE=true bun run example:sql
+          echo "code: https://github.com/nxzq/mocq/blob/main/example/faker.ts"
+          bun run example:faker
+      - name: 🧑‍🏫 Static Data Example
+        run: |
+          cd example
+          echo "code: https://github.com/nxzq/mocq/blob/main/example/static.ts"
+          bun run example:static

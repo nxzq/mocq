@@ -1,0 +1,510 @@
+---
+sidebar_position: 2
+title: "Database Load"
+description: "use mocq to create a database load function"
+---
+
+## Getting Started
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
+<ThemedImage
+  alt="SQL Diagram"
+  style={{ aspectRatio: '3 / 1' }}
+  sources={{
+    light: useBaseUrl('/img/mocq-sql.png'),
+    dark: useBaseUrl('/img/mocq-sql-dark.png'),
+  }}
+/>
+
+> this example will be using SQL however the **DB language is irrelevant**, all DB loads will follow this same pattern
+
+For this example we will assume a `Book` always has one `Publisher` and one `Author`
+
+We will be generating mock data utilizing [faker-js](/docs/examples/faker) and writing the generated data to a database
+
+## Configuring Data
+
+In this example we have three types `Publisher`, `Author` and `Book`
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CodeBlock from '@theme/CodeBlock';
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    <CodeBlock language="ts">
+{`type Publisher = {
+  id: string
+  name: string
+}
+type Author = {
+  id: string
+  first_name: string
+  last_name: string
+}
+type Book = {
+  id: string
+  publisher_id: string
+  author_id: string
+  name: string
+}`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    <CodeBlock
+      language="ts"
+      title="/types.ts"
+      showLineNumbers>
+{`export type Publisher = {
+  id: string
+  name: string
+}
+export type Author = {
+  id: string
+  first_name: string
+  last_name: string
+}
+export type Book = {
+  id: string
+  publisher_id: string
+  author_id: string
+  name: string
+}`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+Here are our data generators utilizing [faker-js](/docs/examples/faker)
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    <CodeBlock
+      language="js"
+      title="/generators.js"
+      showLineNumbers>
+  {`import { faker } from "@faker-js/faker";
+  
+export const generateMockPublisher = () => ({
+  id: faker.string.uuid(),
+  name: faker.company.name()
+});
+
+export const generateMockAuthor = () => ({
+  id: faker.string.uuid(),
+  first_name: faker.person.firstName(),
+  last_name: faker.person.lastName()
+});
+
+export const generateMockBook = () => ({
+  id: faker.string.uuid(),
+  publisher_id: faker.string.uuid(),
+  author_id: faker.string.uuid(),
+  name: faker.company.buzzPhrase()
+});`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    <CodeBlock
+      language="ts"
+      title="/generators.ts"
+      showLineNumbers>
+  {`import { faker } from "@faker-js/faker";
+  
+export function generateMockPublisher(): Publisher {
+  return {
+    id: faker.string.uuid(),
+    name: faker.company.name(),
+  };
+};
+
+export function generateMockAuthor(): Author {
+  return {
+    id: faker.string.uuid(),
+    first_name: faker.person.firstName(),
+    last_name: faker.person.lastName(),
+  };
+};
+
+export function generateMockBook(): Book {
+  return {
+    id: faker.string.uuid(),
+    publisher_id: faker.string.uuid(),
+    author_id: faker.string.uuid(),
+    name: faker.company.buzzPhrase(),
+  };
+};`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+`[mocq]` configuration
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+  <CodeBlock
+    language="js"
+    title="/index.js"
+    showLineNumbers>
+{`import { mocq } from 'mocq';
+import { faker } from "@faker-js/faker";
+import { generateMockPublisher, generateMockAuthor, generateMockBook } from './generators';
+
+const config = {
+  publishers: {
+    generator: generateMockPublisher,
+    count: 3,
+  },
+  authors: {
+    generator: generateMockAuthor,
+    count: 5,
+  },
+  books: {
+    generator: generateMockBook,
+    count: 10,
+    connections: {
+      // setting book publisher_id to an ID from a random publisher
+      publishers: (i, publishers)=>({ publisher_id: faker.helpers.arrayElement(publishers).id }),
+      // setting book author_id to an ID from a random author
+      authors: (i, authors)=>({ author_id: faker.helpers.arrayElement(authors).id }),
+    },
+  },
+};
+
+const { generate } = mocq(config);
+
+const { data: { publishers, authors, books } } = generate();`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+  <CodeBlock
+    language="ts"
+    title="/index.ts"
+    showLineNumbers>
+{`import { mocq, MocQ } from 'mocq';
+import { faker } from "@faker-js/faker";
+import { Publisher, Author, Book } from './types';
+import { generateMockPublisher, generateMockAuthor, generateMockBook } from './generators';
+
+// create a custom config type for strict type checking
+type customMocqConfig: {
+  publishers: MocQ<Publisher>
+  authors: MocQ<Author>
+  books: MocQ<Book>
+};
+
+const config: customMocqConfig = {
+  publishers: {
+    generator: generateMockPublisher,
+    count: 3,
+  },
+  authors: {
+    generator: generateMockAuthor,
+    count: 5,
+  },
+  books: {
+    generator: generateMockBook,
+    count: 10,
+    connections: {
+      // setting book publisher_id to an ID from a random publisher
+      publishers: (i: number, data: Publisher[])=>({ publisher_id: faker.helpers.arrayElement(data).id }),
+      // setting book author_id to an ID from a random author
+      authors: (i: number, data: Author[])=>({ author_id: faker.helpers.arrayElement(data).id }),
+    },
+  },
+};
+
+const { generate } = mocq(config);
+
+const { data: { publishers, authors, books } } = generate();`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+<details>
+<summary>
+Sample Resolved Data
+</summary>
+`publishers`: 
+```js
+[
+  {
+    id: "59ce7ec3-ec1b-4096-a4f2-0c0da5725a06",
+    name: "Upton - Kuhn"
+  },
+  // ... 2 more entries
+]
+```
+
+`authors`: 
+```js
+[
+  {
+    id: "dbaa0570-536b-4254-b1d3-f975ef1f4400",
+    first_name: "Russell",
+    last_name: "Zboncak"
+  },
+  // ... 4 more entries
+]
+```
+
+`books`: 
+```js
+[
+  {
+    id: "a24be51e-1a3e-4959-bb8e-9cf6ca5e3c30",
+    publisher_id: "59ce7ec3-ec1b-4096-a4f2-0c0da5725a06",
+    author_id: "dbaa0570-536b-4254-b1d3-f975ef1f4400",
+    name: "engage value-added architectures"
+  }
+  // ... 9 more entries
+]
+```
+</details>
+
+## Database Load Function
+
+When working with a database it is convention to keep the database connection open and reuse it to reduce overhead
+
+:::note
+
+In this example we will just be logging the SQL but this `getDbConnection` function is meant to represent your db language 
+of choice connection or transaction function
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    <CodeBlock language="ts"
+      title="/database.js"
+      showLineNumbers>
+{`export const getDbConnection = () => {
+  return {
+    write(...message: any[]) {
+      console.log('[SQL]', ...message)
+    },
+    close() {
+      console.log('[SQL] connection closed ✅')
+    },
+  };
+};`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    <CodeBlock
+      language="ts"
+      title="/database.ts"
+      showLineNumbers>
+{`export type DbConnection = {
+  write: (...message: any[]) => void
+  close: () => void
+};
+
+export function getDbConnection(): DbConnection {
+  return {
+    write(...message: any[]) {
+      console.log('[SQL]', ...message)
+    },
+    close() {
+      console.log('[SQL] connection closed ✅')
+    },
+  };
+};`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+:::
+
+We'll create a Database Load Function that handles pre and post steps and wrap 
+our `[mocq]` configuration in a function that accepts the database connection
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+  <CodeBlock
+    language="js"
+    title="/index.js"
+    showLineNumbers>
+{`import { mocq } from 'mocq';
+import { faker } from "@faker-js/faker";
+import { generateMockPublisher, generateMockAuthor, generateMockBook } from './generators';
+import { getDbConnection } from './database'
+
+// highlight-start
+/*
+  we wrap our mocq usage in a function in order to preserve the
+  database connection reducing overhead
+*/ 
+// highlight-end
+const seedMockData = async (dbConnection) => {
+  const config = {
+    publishers: {
+      generator: generateMockPublisher,
+      count: 3,
+      // highlight-start
+      handler: (publishers) => {
+        publishers.forEach(x => dbConnection.write(\`INSERT INTO publisher VALUES ('\${x.id}', '\${x.name}');\`));
+      },
+      // highlight-end
+    },
+    authors: {
+      generator: generateMockAuthor,
+      count: 5,
+      // highlight-start
+      handler: (authors) => {
+        authors.forEach(x => dbConnection.write(\`INSERT INTO author VALUES ('\${x.id}', '\${x.first_name}', '\${x.last_name}');\`));
+      },
+      // highlight-end
+    },
+    books: {
+      generator: generateMockBook,
+      count: 10,
+      connections: {
+        publishers: (i, publishers)=>({ publisher_id: faker.helpers.arrayElement(publishers).id }),
+        authors: (i, authors)=>({ author_id: faker.helpers.arrayElement(authors).id }),
+      },
+      // highlight-start
+      handler: (books) => {
+        books.forEach(x => dbConnection.write(\`INSERT INTO books VALUES ('\${x.id}', '\${x.name}', '\${x.publisher_id}', '\${x.author_id}');\`));
+      },
+      // highlight-end
+    },
+  };
+
+  const { execute } = mocq(config);
+  return execute()
+};
+
+// highlight-next-line
+/* database load ƒ(x) */
+const loadDataBaseWithPseudoRandomData = async () => {
+  // highlight-next-line
+  // pre load step
+  const dbConnection = getDbConnection();
+  dbConnection.write('CREATE TABLE publishers (id char, name char);');
+  dbConnection.write('CREATE TABLE authors (id char, first_name char, last_name char);');
+  dbConnection.write('CREATE TABLE books (id char, name char, author_id char, publisher_id char);');
+  // highlight-next-line
+  // mocq executed
+  const { data: { publishers, authors, books }} = await seedMockData(dbConnection);
+  // highlight-next-line
+  // post load step
+  dbConnection.close();
+};
+
+await loadDataBaseWithPseudoRandomData();`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+  <CodeBlock
+    language="ts"
+    title="/index.ts"
+    showLineNumbers>
+{`import { mocq, MocQ } from 'mocq';
+import { faker } from "@faker-js/faker";
+import { Publisher, Author, Book } from './types';
+import { generateMockPublisher, generateMockAuthor, generateMockBook } from './generators';
+import { getDbConnection, DbConnection } from './database'
+
+// create a custom config type for strict type checking
+type customMocqConfig: {
+  publishers: MocQ<Publisher>
+  authors: MocQ<Author>
+  books: MocQ<Book>
+};
+
+// highlight-start
+/*
+  we wrap our mocq usage in a function in order to preserve the
+  database connection reducing overhead
+*/ 
+// highlight-end
+async function seedMockData(dbConnection: DbConnection) {
+  const config: customMocqConfig = {
+    publishers: {
+      generator: generateMockPublisher,
+      count: 3,
+      // highlight-start
+      handler: (data: Publisher[]) => {
+        data.forEach(x => dbConnection.write(\`INSERT INTO publisher VALUES ('\${x.id}', '\${x.name}');\`));
+      },
+      // highlight-end
+    },
+    authors: {
+      generator: generateMockAuthor,
+      count: 5,
+      // highlight-start
+      handler: (data: Author[]) => {
+        data.forEach(x => dbConnection.write(\`INSERT INTO author VALUES ('\${x.id}', '\${x.first_name}', '\${x.last_name}');\`));
+      },
+      // highlight-end
+    },
+    books: {
+      generator: generateMockBook,
+      count: 10,
+      connections: {
+        publishers: (i: number, data: Publisher[])=>({ publisher_id: faker.helpers.arrayElement(data).id }),
+        authors: (i: number, data: Author[])=>({ author_id: faker.helpers.arrayElement(data).id }),
+      },
+      // highlight-start
+      handler: (data: Book[]) => {
+        data.forEach(x => dbConnection.write(\`INSERT INTO books VALUES ('\${x.id}', '\${x.name}', '\${x.publisher_id}', '\${x.author_id}');\`));
+      },
+      // highlight-end
+    },
+  };
+
+  const { execute } = mocq(config);
+  return execute()
+};
+
+// highlight-next-line
+/* database load ƒ(x) */
+async function loadDataBaseWithPseudoRandomData() {
+  // highlight-next-line
+  // pre load step
+  const dbConnection = getDbConnection();
+  dbConnection.write('CREATE TABLE publishers (id char, name char);');
+  dbConnection.write('CREATE TABLE authors (id char, first_name char, last_name char);');
+  dbConnection.write('CREATE TABLE books (id char, name char, author_id char, publisher_id char);');
+  // highlight-next-line
+  // mocq executed
+  const { data: { publishers, authors, books }} = await seedMockData(dbConnection);
+  // highlight-next-line
+  // post load step
+  dbConnection.close();
+};
+
+await loadDataBaseWithPseudoRandomData();`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+<details>
+<summary>
+Sample Output
+</summary>
+```sql
+[SQL] CREATE TABLE publishers (id char, name char);
+[SQL] CREATE TABLE authors (id char, first_name char, last_name char);
+[SQL] CREATE TABLE books (id char, name char, author_id char, publisher_id char);
+[SQL] INSERT INTO publisher VALUES ('54b1d77c-5c7a-45b1-a59a-da56afec3ab7', 'Schultz - Cassin');
+[SQL] INSERT INTO publisher VALUES ('b854fe7f-d26f-47f3-83be-ce6b03be844f', 'Carter Group');
+[SQL] INSERT INTO publisher VALUES ('40bb1f15-f01e-42a9-834a-b9ae28dc655d', 'Rath and Sons');
+[SQL] INSERT INTO author VALUES ('e72766ee-bb85-4f5d-8986-f0d632416468', 'Deven', 'Williamson');
+[SQL] INSERT INTO author VALUES ('5db435c7-d092-4676-bc69-bc10c8618938', 'Korbin', 'Abshire');
+[SQL] INSERT INTO author VALUES ('b9a4708b-e82b-467e-b1fa-245c9f9174b3', 'Stan', 'Hudson');
+[SQL] INSERT INTO author VALUES ('e9d6035a-8cc6-437d-a860-51b1800855ef', 'Pete', 'Larkin');
+[SQL] INSERT INTO author VALUES ('15c665ea-6ae1-4ae5-91aa-58d66aeade86', 'Damaris', 'Swift');
+[SQL] INSERT INTO books VALUES ('04be8162-b5cf-41f3-baae-c2211745b974', 'maximize integrated deliverables', '40bb1f15-f01e-42a9-834a-b9ae28dc655d', 'e72766ee-bb85-4f5d-8986-f0d632416468');
+[SQL] INSERT INTO books VALUES ('b8b0f4e7-3d3d-471f-9064-fb6e71f3695c', 'evolve value-added applications', '40bb1f15-f01e-42a9-834a-b9ae28dc655d', 'e9d6035a-8cc6-437d-a860-51b1800855ef');
+[SQL] INSERT INTO books VALUES ('70bdd155-22fb-40b6-b6eb-2a9dd158ebf4', 'benchmark end-to-end partnerships', '40bb1f15-f01e-42a9-834a-b9ae28dc655d', 'e9d6035a-8cc6-437d-a860-51b1800855ef');
+[SQL] INSERT INTO books VALUES ('d918f05f-8ce0-408e-aebc-f00caa8c2fc0', 'e-enable strategic synergies', '40bb1f15-f01e-42a9-834a-b9ae28dc655d', '15c665ea-6ae1-4ae5-91aa-58d66aeade86');
+[SQL] INSERT INTO books VALUES ('bc6c70e9-97fa-4c03-906c-991524cf4ff0', 'grow front-end markets', 'b854fe7f-d26f-47f3-83be-ce6b03be844f', 'e9d6035a-8cc6-437d-a860-51b1800855ef');
+[SQL] INSERT INTO books VALUES ('be64e9c5-a4c8-4644-b83c-435b7f92a2f6', 'transition leading-edge networks', 'b854fe7f-d26f-47f3-83be-ce6b03be844f', 'e9d6035a-8cc6-437d-a860-51b1800855ef');
+[SQL] INSERT INTO books VALUES ('d9afdb08-77e2-44d1-bfc6-e57c94fdc5e8', 'whiteboard wireless interfaces', 'b854fe7f-d26f-47f3-83be-ce6b03be844f', '15c665ea-6ae1-4ae5-91aa-58d66aeade86');
+[SQL] INSERT INTO books VALUES ('1dc3ff59-2fc7-4f92-bcd8-e674b3d3a385', 'deliver strategic e-commerce', '54b1d77c-5c7a-45b1-a59a-da56afec3ab7', 'b9a4708b-e82b-467e-b1fa-245c9f9174b3');
+[SQL] INSERT INTO books VALUES ('3bd6c787-f977-415d-bbd7-a4cfd6ad5cd8', 'scale frictionless models', 'b854fe7f-d26f-47f3-83be-ce6b03be844f', '5db435c7-d092-4676-bc69-bc10c8618938');
+[SQL] INSERT INTO books VALUES ('c86b83d3-2e48-40af-8bee-f8fdda9ace82', 'disintermediate ubiquitous applications', '40bb1f15-f01e-42a9-834a-b9ae28dc655d', 'e9d6035a-8cc6-437d-a860-51b1800855ef');
+[SQL] connection closed ✅
+```
+</details>

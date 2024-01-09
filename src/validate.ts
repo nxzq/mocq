@@ -17,6 +17,11 @@ export const validate = <T>(config: T extends Config ? T : Config): Array<keyof 
       }
       if (!visited.has(key)) {
         logger.system('validation', key)
+        if (Number(config[key].count) <= 0) {
+          const message = (emphasisFn: (x: string) => string) => `count for key ${emphasisFn(String(key))} must be a number greater than zero (0)`
+          logger.error(message(emphasisLogText))
+          throw new Error(message(emphasisErrorText))
+        }
         if (typeof config[key].generator !== 'function') {
           const message = (emphasisFn: (x: string) => string) => `generator for key ${emphasisFn(String(key))} must be a function`
           logger.error(message(emphasisLogText))

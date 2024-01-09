@@ -1,73 +1,22 @@
 import clsx from 'clsx';
-import Heading from '@theme/Heading';
+import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-//<img src={useBaseUrl('/img/docusaurus.png')} />;
 import ThemedImage from '@theme/ThemedImage';
+import CodeBlock from '@theme/CodeBlock';
 import styles from './styles.module.css';
-
-type FeatureItem = {
-  title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
-  description: JSX.Element;
-};
-
-const FeatureList: FeatureItem[] = [
-  {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
-    description: (
-      <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
-      </>
-    ),
-  },
-  {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
-    description: (
-      <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
-      </>
-    ),
-  },
-  {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
-    description: (
-      <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
-      </>
-    ),
-  },
-];
-
-function Feature({title, Svg, description}: FeatureItem) {
-  return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <Heading as="h3">{title}</Heading>
-        <p>{description}</p>
-      </div>
-    </div>
-  );
-}
 
 export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
-      <div  className="row" style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
-          <p style={{ fontSize: 20 }}>
-            data models often have many connections between various data objects,
+      <div className={clsx('row', styles.heroRow)}>
+        <div className={clsx('col col--4', styles.heroCol)}>
+          <p>
+            Data models have many growing relationships, making the programmatic creation of traversable data sets cumbersome
           </p>
+        </div>
           <ThemedImage
-            // alt="Docusaurus themed image"
+            alt="Data Relationships Graph"
             width='400'
             sources={{
               light: useBaseUrl('/img/mocq-data-connections.png'),
@@ -75,23 +24,32 @@ export default function HomepageFeatures(): JSX.Element {
             }}
           />
         </div>
-        <br />
-        <div className="row" style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+        <div className={clsx(styles.heroRow, 'row')}>
           <ThemedImage
-            // alt="Docusaurus themed image"
+            alt="mocq Config Visual"
             width='450'
             sources={{
               light: useBaseUrl('/img/mocq-config.png'),
               dark: useBaseUrl('/img/mocq-config-dark.png'),
             }}
           />
-          <p style={{ fontSize: 20 }}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+          <div className={clsx('col col--4', styles.heroCol)}>
+            <p><code>[mocq]</code> makes the process more transparent and extendable
+            <br/>
+            <br/>
+            Data objects are configured in isolation as a series of <i><b>generator</b></i> and <i><b>connection</b></i> functions
+            <br/>
+            <br/>
+            In any context, devs are only concerned with the parent connections, lightening the mental load
+            </p>
+          </div>
         </div>
-        <br />
-        <div className="row" style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
-          <p style={{ fontSize: 20 }}>mocq takes care of the execution order</p>
+        <div className={clsx('row', styles.heroRow)}>
+          <div className={clsx('col col--4', styles.heroCol)}>
+          <p><code>[mocq]</code> derives the execution order from connections, flagging cyclic dependencies</p>
+          </div>
           <ThemedImage
-            // alt="Docusaurus themed image"
+            alt="Execution Order Visual"
             width='350'
             sources={{
               light: useBaseUrl('/img/mocq-execution-order.png'),
@@ -99,23 +57,44 @@ export default function HomepageFeatures(): JSX.Element {
             }}
           />
         </div>
-        <br />
-        <div className="row" style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+        <div className={clsx('row', styles.heroRow)}>
           <ThemedImage
-            // alt="Docusaurus themed image"
+            alt="Data Resolution Visual"
             width='450'
             sources={{
               light: useBaseUrl('/img/mocq-data-resolution.png'),
               dark: useBaseUrl('/img/mocq-data-resolution-dark.png'),
             }}
           />
-          <p style={{ fontSize: 20 }}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+          <div className={clsx('col col--4', styles.heroCol)}>
+            <p>Data is fully resolved before being passed to a connection function
+            <br />
+            <br />
+            Allowing data to be defined once and cascade throughout the data model resulting in traversable datasets</p>
+          </div>
         </div>
-        {/* <div className="row">
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
-          ))}
-        </div> */}
+        <div className={clsx('row', styles.heroRow)}>
+          <div className={clsx('col col--4', styles.heroCol)}>
+            <p>
+              <Link to='docs/#generate'><code>generate</code></Link> data on the fly or add <i><b>handler</b></i> functions to the configuration
+              and <Link to='docs/#execute'><code>execute</code></Link> against generated data utilizing derived execution order to ensure data is there
+            </p>
+          </div>
+          <div className={clsx('col col--4', styles.heroCol)}>
+            <CodeBlock language="ts">
+              {`const { generate, execute } = mocq(customConfigObj);`}
+            </CodeBlock>
+          </div>
+        </div>
+        <div className={clsx('row', styles.heroRow)}>
+          <div className={clsx('col col--8', styles.heroCol)}>
+            <p>
+              Check out the <Link to='docs'><b>docs</b></Link>, try out the <Link to='docs/tutorial'><b>tutorial</b></Link> or 
+              <br/>
+              browse the <Link to='docs/examples'><b>examples</b></Link> to get started using <code>[mocq]</code> today 🚀
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

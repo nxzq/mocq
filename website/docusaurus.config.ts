@@ -4,8 +4,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'mocq',
-  tagline: 'mock data creation, connection & execution coordination utility',
-  favicon: 'img/favicon.ico',
+  tagline: 'data creation, connection & execution coordination utility',
+  favicon: 'img/test-tube.png',
 
   // Set the production url of your site here
   url: 'https://nxzq.github.io',
@@ -63,10 +63,10 @@ const config: Config = {
       defaultMode: 'dark',
       respectPrefersColorScheme: true,
     },
-    // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/mocq-social-card.jpg',
     navbar: {
-      title: 'mocQ',
+      title: 'mocq',
+      hideOnScroll: true,
       logo: {
         alt: 'Test Tube Emoji',
         src: 'img/test-tube.png',
@@ -74,9 +74,20 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          sidebarId: 'docsSidebar',
           position: 'left',
           label: 'Docs',
+        },
+        {
+          to: 'docs/examples',
+          position: 'left',
+          label: 'Examples',
+        },
+        {
+          href: 'https://npmjs.com/package/mocq',
+          className: 'header-npm-link',
+          'aria-label': 'npm Repository',
+          position: 'right',
         },
         {
           href: 'https://github.com/nxzq/mocq',
@@ -87,52 +98,23 @@ const config: Config = {
       ],
     },
     footer: {
-      // links: [
-      //   {
-      //     title: 'Docs',
-      //     items: [
-      //       {
-      //         label: 'Tutorial',
-      //         to: '/docs/intro',
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     title: 'Community',
-      //     items: [
-      //       {
-      //         label: 'Stack Overflow',
-      //         href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-      //       },
-      //       {
-      //         label: 'Discord',
-      //         href: 'https://discordapp.com/invite/docusaurus',
-      //       },
-      //       {
-      //         label: 'Twitter',
-      //         href: 'https://twitter.com/docusaurus',
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     title: 'More',
-      //     items: [
-      //       {
-      //         label: 'Blog',
-      //         to: '/blog',
-      //       },
-      //       {
-      //         label: 'GitHub',
-      //         href: 'https://github.com/facebook/docusaurus',
-      //       },
-      //     ],
-      //   },
-      // ],
-      copyright: `Built with Docusaurus.`,
+      copyright: `<html>
+        <div class='textWithTrailingIcon'>
+          <p>docs built with <a href='https://docusaurus.io/'>docusaurus</a></p>
+          <img src='http://localhost:3000/mocq/img/logo.svg'/>
+        </div>
+      </html>`,
     },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: [
+        'bash', 
+        'typescript', 
+        'javascript', 
+        'json', 
+        'sql',
+      ],
     },
   } satisfies Preset.ThemeConfig,
 };

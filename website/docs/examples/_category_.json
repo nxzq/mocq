@@ -1,8 +1,10 @@
 {
   "label": "Examples",
   "position": 3,
+  "collapsed": false,
   "link": {
     "type": "generated-index",
-    "description": "5 minutes to learn the most important Docusaurus concepts."
+    "description": "example mocq usage",
+    "slug": "examples"
   }
 }

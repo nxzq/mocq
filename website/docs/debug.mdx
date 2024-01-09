@@ -1,0 +1,51 @@
+---
+title: Debug
+sidebar_position: 5
+---
+
+## Verbose Mode
+
+:::tip
+
+when debugging set the `MOCQ_VERBOSE` .env variable to `true` for verbose logs
+
+:::
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
+<ThemedImage
+  alt="mocq Verbose Example"
+  style={{aspectRatio: '2/1'}}
+  sources={{
+    light: useBaseUrl('/img/mocq-verbose.png'),
+    dark: useBaseUrl('/img/mocq-verbose-dark.png'),
+  }}
+/>
+
+### node (server-side code)
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="env" label=".env file" default>
+    ```js
+    export MOCQ_VERBOSE=true // note: must `source .env` after setting value
+    ```
+  </TabItem>
+  <TabItem value="code" label="inline code">
+    ```ts
+    process.env.MOCQ_VERBOSE = 'true'
+    ```
+  </TabItem>
+  <TabItem value="cli" label="inline cli">
+    ```bash
+    MOCQ_VERBOSE=true # whatever cli command | example: MOCQ_VERBOSE=true bun test
+    ```
+  </TabItem>
+</Tabs>
+
+### browser
+
+reference your frameworks docs on how to configure env vars

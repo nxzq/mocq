@@ -47,5 +47,6 @@ export const generate = <T extends Config>(
 
   result[key as keyof T] = data as ReturnType<T[typeof key]['generator']>[]
 }
+logger.success('data generation complete')
 return result
 }
