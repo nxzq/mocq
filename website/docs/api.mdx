@@ -48,6 +48,8 @@ key-value pairs allowing for the ability to _hook into the generated data of con
 
 see [data resolution](/docs/#data-resolution) for more info 
 
+> function must be _`sync`_
+
 <CodeBlock language="ts">
 {`{ 
   [connectionKey: string]: (index: number, connectionKeyData: unknown[]) => Partial<T>

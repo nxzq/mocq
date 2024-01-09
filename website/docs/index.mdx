@@ -28,6 +28,9 @@ import TabItem from '@theme/TabItem';
 
 ## Basic Concepts
 
+`[mocq]` is a super small (`<6 kB`) [TypeScript](https://www.typescriptlang.org/) utility 
+for data creation, connection & execution coordination
+
 `[mocq]` exports a single function `mocq`, this function takes in a [custom config object](#configuration), vaildates the configuration and returns two functions [generate](#generate) & [execute](#execute)
 
 ```js
@@ -44,7 +47,10 @@ const { generate, execute } = mocq(customConfigObj);
   - you will use this key to reference resolved data from `connections` of other key-value pairs
 >
 > `value` is a [MocQ config object](/docs/api)
-  - which includes functions you define that define how to generate, connect to other keys in the configuration, and how to handle data when execute is called
+  - user defined functions:
+    - how to generate a data instance
+    - how to connect to other keys in the configuration
+    - how to handle data when execute is called
 
 **Each key should correspond to a single data object type**
 

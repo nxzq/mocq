@@ -101,7 +101,7 @@ These functions create a `singe instance` of `Node` & `User` type, and are hande
 
 Now we define our configuration object, we'll make **25** `Users` and **100** `Nodes` using the generator functions we wrote above
 
-We'll use the configuration key names `users` and `nodes` for our `User` and `Node` data type configurations to maintain context
+We'll use the configuration key names **`users`** and **`nodes`** for our `User` and `Node` data type configurations to maintain context
 
 <Tabs groupId="code-block-language">
   <TabItem value="js" label="JavaScript">
@@ -171,7 +171,7 @@ const { data: { users, nodes } } = generate();`}
 <summary>
 Sample Resolved Data
 </summary>
-`users`: 
+**`users`**: 
 ```js
 [
   {
@@ -182,7 +182,7 @@ Sample Resolved Data
 ]
 ```
 
-`nodes`: 
+**`nodes`**: 
 ```js
 [
   {
@@ -230,9 +230,9 @@ export function userCreatedNodeConnection (i: number: data: User[]): Partial<Nod
 </Tabs>
 
 Again this function is utilized at the `instance level`, we are given the `index` of the current `Node` instance being manipulated
-and the resolved data from the `users` config
+and the resolved data from the **`users`** config
 
-Let's add the connection to the `nodes` configuration under `connections` with the key `users` to enable the function to hook into the `users` config resolved data
+Let's add the connection to the **`nodes`** configuration under `connections` with the key **`users`** to enable the function to hook into the **`users`** config resolved data
 
 <Tabs groupId="code-block-language">
   <TabItem value="js" label="JavaScript">
@@ -310,7 +310,7 @@ const { data: { users, nodes } } = generate();`}
 <summary>
 Sample Resolved Data
 </summary>
-`users`: 
+**`users`**: 
 ```js
 [
   {
@@ -321,7 +321,7 @@ Sample Resolved Data
 ]
 ```
 
-`nodes`: 
+**`nodes`**: 
 ```js
 [
   {
