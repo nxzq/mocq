@@ -2,7 +2,7 @@ name: docs
 
 on:
   push:
-    branches: [main]
+    # branches: [main]
 
 jobs:
   deploy:
@@ -10,6 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.0.13
       - name: Install and Build 🔧
         run: |
           bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline
