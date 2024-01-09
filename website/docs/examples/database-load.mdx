@@ -38,18 +38,18 @@ import CodeBlock from '@theme/CodeBlock';
 {`type Publisher = {
   id: string
   name: string
-}
+};
 type Author = {
   id: string
   first_name: string
   last_name: string
-}
+};
 type Book = {
   id: string
   publisher_id: string
   author_id: string
   name: string
-}`}
+};`}
     </CodeBlock>
   </TabItem>
   <TabItem value="ts" label="TypeScript">
@@ -60,18 +60,18 @@ type Book = {
 {`export type Publisher = {
   id: string
   name: string
-}
+};
 export type Author = {
   id: string
   first_name: string
   last_name: string
-}
+};
 export type Book = {
   id: string
   publisher_id: string
   author_id: string
   name: string
-}`}
+};`}
     </CodeBlock>
   </TabItem>
 </Tabs>
@@ -391,6 +391,8 @@ const loadDataBaseWithPseudoRandomData = async () => {
   dbConnection.close();
 };
 
+// highlight-next-line
+/* execute database load ƒ(x) */
 await loadDataBaseWithPseudoRandomData();`}
     </CodeBlock>
   </TabItem>
@@ -474,6 +476,8 @@ async function loadDataBaseWithPseudoRandomData() {
   dbConnection.close();
 };
 
+// highlight-next-line
+/* execute database load ƒ(x) */
 await loadDataBaseWithPseudoRandomData();`}
     </CodeBlock>
   </TabItem>

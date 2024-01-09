@@ -24,7 +24,7 @@ type MocQ<T> = {
 
 ### generator - `required`
 
-function that returns an instance of a data object
+_synchronous_ function that returns an instance of a data object
 
 > utilize the index for fields requiring uniqueness
 
@@ -58,6 +58,8 @@ see [data resolution](/docs/#data-resolution) for more info
 
 function to be ran when `execute` is called
 
+> can be _`sync`_ or _`async`_
+
 <CodeBlock language="ts">
-  {`type DataHandler<T> = (data: T[]) => Promise<void> | void`}
+  {`(data: T[]) => Promise<void> | void`}
 </CodeBlock>
