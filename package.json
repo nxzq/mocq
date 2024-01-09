@@ -3,7 +3,7 @@
   "private": true,
   "workspaces": [
     "src",
-    "example",
+    "examples",
     "website"
   ]
 }

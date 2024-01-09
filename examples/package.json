@@ -1,10 +1,10 @@
 {
-  "name": "mocq-example",
+  "name": "mocq-examples",
   "scripts": {
     "example:basic": "bun basic.ts",
+    "example:database": "bun database-load.ts",
     "example:faker": "bun faker.ts",
-    "example:static": "bun static.ts",
-    "example:sql": "bun sql-data-load.ts"
+    "example:static": "bun static.ts"
   },
   "devDependencies": {
     "bun-types": "latest"
