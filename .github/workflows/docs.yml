@@ -2,7 +2,7 @@ name: docs
 
 on:
   push:
-    # branches: [main]
+    branches: [main]
 
 jobs:
   deploy:
@@ -16,6 +16,7 @@ jobs:
         run: |
           bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline --frozen-lockfile
           cd website
+          # temp fix for build error https://github.com/nxzq/mocq/actions/runs/7457017665/job/20288559627#step:4:19
           bun i
           bun run build
       - name: Deploy 🚀
