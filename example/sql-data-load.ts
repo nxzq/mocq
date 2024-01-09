@@ -127,9 +127,6 @@ const loadDataBaseWithPseudoRandomData = async () => {
   dbConnection.write(`CREATE TABLE books (id char, name char, author_id char, publisher_id char);`)
   // mocq executed
   const { data: { publishers, authors, books }} = await dbLoad(dbConnection)
-  console.log(publishers[0])
-  console.log(authors[0])
-  console.log(books[0])
   // post load step
   dbConnection.close()
 }
