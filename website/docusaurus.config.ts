@@ -101,7 +101,7 @@ const config: Config = {
       copyright: `<html>
         <div class='textWithTrailingIcon'>
           <p>docs built with <a href='https://docusaurus.io/'>docusaurus</a></p>
-          <img src='http://localhost:3000/mocq/img/logo.svg'/>
+          <img src='https://nxzq.github.io/mocq/img/logo.svg'/>
         </div>
       </html>`,
     },
