@@ -16,6 +16,7 @@ jobs:
         run: |
           bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline --frozen-lockfile
           cd website
+          bun i
           bun run build
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.5
