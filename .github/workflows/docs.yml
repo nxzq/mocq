@@ -1,0 +1,22 @@
+name: docs
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: oven-sh/setup-bun@v1
+      - name: Install and Build 🔧
+        run: |
+          bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline
+          cd website
+          bun run build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: gh-pages
+          folder: website/build

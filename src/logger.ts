@@ -1,6 +1,6 @@
 const log = (...params: any): void => {
   {
-    const verbose = process.env.MOCQ_VERBOSE
+    const verbose = (typeof process === 'undefined') ? false : process.env.MOCQ_VERBOSE
     if (verbose === 'true')
       console.log(...params)
   }
@@ -41,15 +41,15 @@ export const logger = {
   },
   system: (type: systemLogType, ...content: any): void => {
     if (type === 'connection')
-      log(prefix, '\x1b[0;34m[connecting mock data]\x1b[0m', ...content)
+      log(prefix, '\x1b[0;34m[connecting data]\x1b[0m', ...content)
     if (type === 'evaluation')
-      log(prefix, '\x1b[1;34m[evaluating connection]\x1b[0m', ...content)
+      log(prefix, '\x1b[0;37m[evaluating connection]\x1b[0m', ...content)
     if (type === 'execution')
-      log(prefix, '\x1b[0;35m[executing mock data handler]\x1b[0m', ...content)
+      log(prefix, '\x1b[0;35m[executing data handler]\x1b[0m', ...content)
     if (type === 'generation')
-      log(prefix, '\x1b[0;32m[generating mock data]\x1b[0m', ...content)
+      log(prefix, '\x1b[0;32m[generating data]\x1b[0m', ...content)
     if (type === 'validation')
-      log(prefix, '\x1b[1;37m[validating configuration]\x1b[0m', ...content)
+      log(prefix, '\x1b[0;37m[validating configuration]\x1b[0m', ...content)
   },
   warn: (content: any): void => {
     console.warn(prefix, '\x1b[0;33m[WARNING]\x1b[0m', content)

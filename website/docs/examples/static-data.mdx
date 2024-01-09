@@ -1,0 +1,59 @@
+---
+sidebar_position: 4
+title: "Usage with Static Data"
+description: "use static data as data seed"
+---
+
+:::note What if I already have my data?
+
+`Data already generated?` Simply have generator function map over exisiting `Array` as shown below with `JSON` data
+
+:::
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    ```js
+    import { mocq } from "mocq";
+    // highlight-next-line
+    import jsonData from './data.json';
+
+    const { generate } = mocq({
+      nodes: {
+        // highlight-start
+        generator: (i) => jsonData[i],
+        count: jsonData.length,
+        // highlight-end
+      }
+    });
+
+    const { data: { nodes } } = generate();
+    ```
+    </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    ```ts
+    import { mocq, MocQ } from "mocq";
+    // highlight-next-line
+    import jsonData from './data.json';
+
+    type JsonDataType = {
+      id: number
+      name: string
+      type: string[]
+    }
+
+    const { generate } = mocq({
+      nodes: {
+        // highlight-start
+        generator: (i: number) => jsonData[i],
+        count: jsonData.length,
+        // highlight-end
+      } as MocQ<JsonDataType>
+    });
+
+    const { data: { nodes } } = generate();
+    ```
+  </TabItem>
+</Tabs>

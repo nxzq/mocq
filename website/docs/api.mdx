@@ -1,0 +1,63 @@
+---
+title: API
+sidebar_position: 4
+---
+
+## Config
+
+import CodeBlock from '@theme/CodeBlock';
+
+<CodeBlock language="ts">
+  {`interface Config {
+  [key: string]: MocQ<object>
+}
+
+type MocQ<T> = {
+  generator: DataGenerator<T>
+  count: number
+  connections?: {
+    [key: string]: DataConnection<T>
+  }
+  handler?: DataHandler<T>
+}`}
+</CodeBlock>
+
+### generator - `required`
+
+function that returns an instance of a data object
+
+> utilize the index for fields requiring uniqueness
+
+<CodeBlock language="ts">
+  {`(index: number) => T`}
+</CodeBlock>
+
+### count - `required`
+
+number of desired data objects
+
+<CodeBlock language="ts">
+  {`number > 0`}
+</CodeBlock>
+
+### connections - `optional`
+
+key-value pairs allowing for the ability to _hook into the generated data of configuration with same key_ per instance of current data type
+
+> connection key must be present in top level config
+
+see [data resolution](/docs/#data-resolution) for more info 
+
+<CodeBlock language="ts">
+{`{ 
+  [connectionKey: string]: (index: number, connectionKeyData: unknown[]) => Partial<T>
+}`}
+</CodeBlock>
+
+### handler - `optional`
+
+function to be ran when `execute` is called
+
+<CodeBlock language="ts">
+  {`type DataHandler<T> = (data: T[]) => Promise<void> | void`}
+</CodeBlock>

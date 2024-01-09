@@ -1,0 +1,502 @@
+---
+title: Tutorial
+sidebar_position: 2
+---
+
+Let's discover **`[mocq]` in less than 5 minutes**.
+
+## Getting Started
+
+For this tutorial we will be working with these two types `User` and `Node`
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import CodeBlock from '@theme/CodeBlock';
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    <CodeBlock language="ts">
+{`type User = {
+  username: string
+  email: string
+}
+type Node = {
+  name: string
+  createdBy: string
+}`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    <CodeBlock
+      language="ts"
+      title="/types.ts"
+      showLineNumbers>
+{`export type User = {
+  username: string
+  email: string
+}
+export type Node = {
+  name: string
+  createdBy: string
+}`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+In this contrived example `Nodes` are created by `Users`
+
+**The goal of this tutorial will be:**
+- generate mock `Users` & `Nodes`
+- connect `Node` data with `User` data, ensuring every `Node` is created by a valid `User`
+- explore using handlers to do something with this resolved data
+
+## Generatoring Data
+
+First we'll define some data generator functions
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    <CodeBlock
+      language="js"
+      title="/generators.js"
+      showLineNumbers>
+  {`export const generateMockUser = (i) => {
+  const username = \`user_\${i}\`;
+  return {
+    username,
+    email: \`\${username}@email.com\`,
+  };
+};
+
+export const generateMockNode = (i) => ({
+  name: \`node_\${i}\`,
+  createdBy: 'unknown',
+});`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    <CodeBlock
+      language="ts"
+      title="/generators.ts"
+      showLineNumbers>
+  {`export function generateMockUser (i: number): User {
+  const username = \`user_\${i}\`;
+  return {
+    username,
+    email: \`\${username}@email.com\`,
+  };
+};
+
+export function generateMockNode (i: number): Node {
+  return: {
+    name: \`node_\${i}\`,
+    createdBy: 'unknown',
+  };
+};`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+These functions create a `singe instance` of `Node` & `User` type, and are handed `index` for use with uniqueness
+
+Now we define our configuration object, we'll make **25** `Users` and **100** `Nodes` using the generator functions we wrote above
+
+We'll use the configuration key names `users` and `nodes` for our `User` and `Node` data type configurations to maintain context
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+  <CodeBlock
+    language="js"
+    title="/index.js"
+    showLineNumbers>
+{`import { mocq } from 'mocq';
+// highlight-next-line
+import { generateMockUser, generateMockNode } from './generators';
+
+const config = {
+  // highlight-start
+  users: {
+    generator: generateMockUser,
+    count: 25,
+  },
+  nodes: {
+    generator: generateMockNode,
+    count: 100,
+  },
+  // highlight-end
+};
+
+const { generate } = mocq(config);
+
+const { data: { users, nodes } } = generate();`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+  <CodeBlock
+    language="ts"
+    title="/index.ts"
+    showLineNumbers>
+{`import { mocq, MocQ } from 'mocq';
+import { User, Node } from './types';
+// highlight-next-line
+import { generateMockUser, generateMockNode } from './generators';
+
+// create a custom config type for strict type checking
+type customMocqConfig: {
+  users: MocQ<User>,
+  nodes: MocQ<Node>,
+};
+
+const config: customMocqConfig = {
+  // highlight-start
+  users: {
+    generator: generateMockUser,
+    count: 25,
+  },
+  nodes: {
+    generator: generateMockNode,
+    count: 100,
+  },
+  // highlight-end
+};
+
+const { generate } = mocq(config);
+
+const { data: { users, nodes } } = generate();`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+<details>
+<summary>
+Sample Resolved Data
+</summary>
+`users`: 
+```js
+[
+  {
+    username: 'user_0'
+    email: 'user_0@email.com'
+  },
+  // ... 24 more entries
+]
+```
+
+`nodes`: 
+```js
+[
+  {
+    name: 'node_0'
+    createdBy: 'unkown'
+  },
+  // ... 99 more entries
+]
+```
+</details>
+
+## Connecting Data
+
+Now we'll define our connection function, this function will assign a random `User` username to the `createdBy` value for each `Node`
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+  <CodeBlock
+    language="js"
+    title="/connections.js"
+    showLineNumbers>
+{`export const userCreatedNodeConnection = (i, users) => {
+  const randomIndex = Math.floor(Math.random() * users.length);
+  return {
+    createdBy: users[randomIndex].username,
+  };
+};`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+  <CodeBlock
+    language="ts"
+    title="/connections.ts"
+    showLineNumbers>
+{`import { User, Node } from './types';
+
+export function userCreatedNodeConnection (i: number: data: User[]): Partial<Node> {
+  const randomIndex = Math.floor(Math.random() * data.length);
+  return {
+    createdBy: data[randomIndex].username,
+  };
+};`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+Again this function is utilized at the `instance level`, we are given the `index` of the current `Node` instance being manipulated
+and the resolved data from the `users` config
+
+Let's add the connection to the `nodes` configuration under `connections` with the key `users` to enable the function to hook into the `users` config resolved data
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+  <CodeBlock
+    language="js"
+    title="/index.js"
+    showLineNumbers>
+{`import { mocq } from 'mocq';
+import { generateMockUser, generateMockNode } from './generators';
+// highlight-next-line
+import { userCreatedNodeConnection } from './connections';
+
+const config = {
+  users: {
+    generator: generateMockUser,
+    count: 25,
+  },
+  nodes: {
+    generator: generateMockNode,
+    count: 100,
+    // highlight-start
+    connections: {
+      users: userCreatedNodeConnection,
+    };
+    // highlight-end
+  },
+};
+
+const { generate } = mocq(config);
+
+const { data: { users, nodes } } = generate();`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+  <CodeBlock
+    language="ts"
+    title="/index.ts"
+    showLineNumbers>
+{`import { mocq, MocQ } from 'mocq';
+import { User, Node } from './types';
+import { generateMockUser, generateMockNode } from './generators';
+// highlight-next-line
+import { userCreatedNodeConnection } from './connections';
+
+// create a custom config type for strict type checking
+type customMocqConfig: {
+  users: MocQ<User>,
+  nodes: MocQ<Node>,
+};
+
+const config: customMocqConfig = {
+  users: {
+    generator: generateMockUser,
+    count: 25,
+  },
+  nodes: {
+    generator: generateMockNode,
+    count: 100,
+    // highlight-start
+    connections: {
+      users: userCreatedNodeConnection,
+    };
+    // highlight-end
+  },
+};
+
+const { generate } = mocq(config);
+
+const { data: { users, nodes } } = generate();`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+<details>
+<summary>
+Sample Resolved Data
+</summary>
+`users`: 
+```js
+[
+  {
+    username: 'user_0'
+    email: 'user_0@email.com'
+  },
+  // ... 24 more entries
+]
+```
+
+`nodes`: 
+```js
+[
+  {
+    name: 'node_0'
+    createdBy: 'user_7'
+  },
+  {
+    name: 'node_1'
+    createdBy: 'user_3'
+  },
+  // ... 98 more entries
+]
+```
+</details>
+
+## Handling Resolved Data
+
+Our data is now generating correctly
+
+In our simple example it's very easy to see that `Users` need to be defined before `Nodes` in order for 
+the `createdBy` field to be properly reference generated `Users`
+
+However for larger data sets with many types of objects this order of operations might not be as apparent
+
+**That's where handlers come in to play**, allowing you to execute a function against resloved data utilizing the 
+derived execution order used to generate the data
+
+Meaning whether you're writing this data to a database or calling an api with the data, handler functions will be executed 
+in an order allowing parent data to be defined 1st allowing data to seemless flow into your data store
+
+In this example we will simply log the output with our handler function
+
+:::note
+
+handler functions can be `sync` or `async`
+
+:::
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+  <CodeBlock
+    language="js"
+    title="/handlers.js"
+    showLineNumbers>
+{`export const logHandler = (data) => {
+  data.map(x => console.log(x));
+};`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+  <CodeBlock
+    language="ts"
+    title="/handlers.ts"
+    showLineNumbers>
+{`export function logHandler (data: any[]): void {
+  data.map(x => console.log(x));
+};`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+Now lets add this handler to our configuration
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+  <CodeBlock
+    language="js"
+    title="/index.js"
+    showLineNumbers>
+{`import { mocq } from 'mocq';
+import { generateMockUser, generateMockNode } from './generators';
+import { userCreatedNodeConnection } from './connections';
+// highlight-next-line
+import { logHandler } from './handlers';
+
+const config = {
+  users: {
+    generator: generateMockUser,
+    count: 25,
+    // highlight-start
+    handler: logHandler,
+    // highlight-end
+  },
+  nodes: {
+    generator: generateMockNode,
+    count: 100,
+    connections: {
+      users: userCreatedNodeConnection,
+    };
+    // highlight-start
+    handler: logHandler,
+    // highlight-end
+  },
+};
+
+const { execute } = mocq(config);
+
+const { data: { users, nodes } } = await execute();`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+  <CodeBlock
+    language="ts"
+    title="/index.ts"
+    showLineNumbers>
+{`import { mocq, MocQ } from 'mocq';
+import { User, Node } from './types';
+import { generateMockUser, generateMockNode } from './generators';
+import { userCreatedNodeConnection } from './connections';
+// highlight-next-line
+import { logHandler } from './handlers';
+
+// create a custom config type for strict type checking
+type customMocqConfig: {
+  users: MocQ<User>,
+  nodes: MocQ<Node>,
+};
+
+const config: customMocqConfig = {
+  users: {
+    generator: generateMockUser,
+    count: 25,
+    // highlight-start
+    handler: logHandler,
+    // highlight-end
+  },
+  nodes: {
+    generator: generateMockNode,
+    count: 100,
+    connections: {
+      users: userCreatedNodeConnection,
+    };
+    // highlight-start
+    handler: logHandler,
+    // highlight-end
+  },
+};
+
+const { execute } = mocq(config);
+
+const { data: { users, nodes } } = await execute();`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+<details>
+<summary>
+Sample Output
+</summary>
+```js
+{
+  username: 'user_0'
+  email: 'user_0@email.com'
+}
+{
+  username: 'user_1'
+  email: 'user_1@email.com'
+}
+// ... 23 more entries
+{
+  name: 'node_0'
+  createdBy: 'user_18'
+}
+{
+  name: 'node_1'
+  createdBy: 'user_2'
+}
+// ... 98 more entries
+```
+</details>
+
+:::tip Congratulations
+
+🎉 You have completed the `[mocq]` tutorial 🎉
+
+You should have all the tools you need to start coding but if not check out the [docs](/docs) or browse the [examples](examples) for more 🚀
+
+:::

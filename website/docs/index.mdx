@@ -1,0 +1,134 @@
+---
+title: Getting Started
+sidebar_position: 1
+---
+
+## Install
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="npm" label="npm" default>
+    ```bash
+    npm i --save-dev mocq
+    ```
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+    ```bash
+    yarn add --dev mocq
+    ```
+  </TabItem>
+  <TabItem value="bun" label="bun">
+    ```bash
+    bun add --dev mocq
+    ```
+  </TabItem>
+</Tabs>
+
+## Basic Concepts
+
+`[mocq]` exports a single function `mocq`, this function takes in a [custom config object](#configuration), vaildates the configuration and returns two functions [generate](#generate) & [execute](#execute)
+
+```js
+import { mocq } from 'mocq';
+/* ... */
+const { generate, execute } = mocq(customConfigObj);
+```
+
+### Configuration
+
+`[mocq]` is configured with an object of `key-value pairs` where the:
+
+> `key` is a contextual string that you choose
+  - you will use this key to reference resolved data from `connections` of other key-value pairs
+>
+> `value` is a [MocQ config object](/docs/api)
+  - which includes functions you define that define how to generate, connect to other keys in the configuration, and how to handle data when execute is called
+
+**Each key should correspond to a single data object type**
+
+```js
+import { mocq } from 'mocq'
+
+const customConfigObj = {
+  myCustomKey: {
+    generator: // a function to create a myCustomKey node
+    count: // the number of myCustomKey nodes wanted
+    connections?: // ability to hook into resolved data from other keys in config & ammend myCustomKey data
+    handler?: // ability to execute functions against myCustomKey resolved data
+  },
+  myCustomKey2: { 
+    /* ... */
+  },
+  /* ... */
+}
+
+const { generate, execute } = mocq(customConfigObj)
+```
+
+The order of keys in the config does not matter, `[mocq]` manages the [execution order](#execution-order)
+
+Go through the [Tutorial](/docs/tutorial) checkout the [API](/docs/api) or browse some [Examples](/docs/examples) for more information on configuration
+
+### Data Resolution
+
+Use connections to ammend generated data with data generated via another key in the top level configuration
+
+Data is fully resolved before being passed to a connection function
+> meaning the data you're handed in a connection function is the same data 
+that would come back under the same key from the `generate` function
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
+<ThemedImage
+  alt="Data Resolution Visual"
+  width='450'
+  sources={{
+    light: useBaseUrl('/img/mocq-data-resolution.png'),
+    dark: useBaseUrl('/img/mocq-data-resolution-dark.png'),
+  }}
+/>
+
+Data is resolved by spreading the **top level keys** of the return of connection functions over the return of generator function
+
+:::info In simple JavaScript you can think of it like this
+
+```js
+{
+  ...generatorFn(),
+  ...connectionFn1(),
+  ...connectionFn2(),
+  ...connectionFnx(),
+}
+```
+
+:::
+
+### Execution Order
+
+**`[mocq]` derives the execution order from connections**, cyclic dependencies & self reference will cause configuration validation to fail
+
+`handler` functions allow you utilize the execution order to invoke functions on the generated data
+
+> this is typically where you'd use your `src` code to  move data into a data store (database operations, api calls, etc.), the execution order 
+ensures dependent data is there at time of execution allow data to be stiched together on the fly
+
+### generate
+
+_sync_ function that generates and connects data
+> returns resolved generated data
+
+```js
+const { data: { key1, key2, ..., keyx } } = generate()
+```
+
+### execute
+
+_async_ function that generates and connects data & executes handler functions 
+> returns resolved generated data
+
+```js
+const { data: { key1, key2, ..., keyx } } = await execute()
+```
