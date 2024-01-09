@@ -14,7 +14,7 @@ jobs:
           bun-version: 1.0.13
       - name: Install and Build 🔧
         run: |
-          bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline
+          bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline --frozen-lockfile
           cd website
           bun run build
       - name: Deploy 🚀
