@@ -33,21 +33,21 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - name: 🧑‍🏫 Basic Usage Example
         run: |
-          cd example
+          cd examples
           echo "code: https://github.com/nxzq/mocq/blob/main/examples/basic.ts"
           bun run example:basic
       - name: 🧑‍🏫 SQL DB Load Example
         run: |
-          cd example
+          cd examples
           echo "code: https://github.com/nxzq/mocq/blob/main/examples/database-load.ts"
           bun run example:database
       - name: 🧑‍🏫 faker-js Example
         run: |
-          cd example
+          cd examples
           echo "code: https://github.com/nxzq/mocq/blob/main/examples/faker.ts"
           bun run example:faker
       - name: 🧑‍🏫 Static Data Example
         run: |
-          cd example
+          cd examples
           echo "code: https://github.com/nxzq/mocq/blob/main/examples/static.ts"
           bun run example:static
