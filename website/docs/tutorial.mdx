@@ -1,9 +1,10 @@
 ---
 title: Tutorial
+description: tutorial on how to get started using mocq
 sidebar_position: 2
 ---
 
-Let's discover **`[mocq]` in less than 5 minutes**.
+Let's discover **`[mocq]` in less than 5 minutes**
 
 ## Getting Started
 
@@ -50,7 +51,7 @@ In this contrived example `Nodes` are created by `Users`
 - connect `Node` data with `User` data, ensuring every `Node` is created by a valid `User`
 - explore using handlers to do something with this resolved data
 
-## Generatoring Data
+## Generating Data
 
 First we'll define some data generator functions
 
@@ -342,7 +343,7 @@ Sample Resolved Data
 Our data is now generating correctly
 
 In our simple example it's very easy to see that `Users` need to be defined before `Nodes` in order for 
-the `createdBy` field to be properly reference generated `Users`
+the `createdBy` field to properly reference generated `Users`
 
 However for larger data sets with many types of objects this order of operations might not be as apparent
 
