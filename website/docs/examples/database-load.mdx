@@ -111,6 +111,7 @@ export const generateMockBook = () => ({
       title="/generators.ts"
       showLineNumbers>
   {`import { faker } from "@faker-js/faker";
+import { Publisher, Author, Book } from './types';
   
 export function generateMockPublisher(): Publisher {
   return {
