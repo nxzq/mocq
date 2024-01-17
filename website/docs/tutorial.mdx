@@ -233,7 +233,7 @@ export function userCreatedNodeConnection (data: User[]): Partial<Node> {
 Again this function is utilized at the `instance level`, we are given the resolved data from the **`users`** config
 
 > we also have access to the `index` and the `data` of the current `Node` instance being manipulated 
-however those won't be needed in our example ([see API for full spec](docs/api#connections---optional))
+however those won't be needed in our example ([see API for full spec](/docs/api#connections---optional))
 
 Let's add the connection to the **`nodes`** configuration under `connections` with the key **`users`** to enable the function to hook into the **`users`** config resolved data
 
