@@ -4,12 +4,15 @@ description: mocq's api
 sidebar_position: 4
 ---
 
+> `[mocq]` configuration spec
+
 ## Config
 
 import CodeBlock from '@theme/CodeBlock';
 
 <CodeBlock language="ts">
-  {`interface Config {
+  {`/** @see MocQ for implementation details */
+interface Config {
   [key: string]: MocQ<object>
 }
 
@@ -17,25 +20,85 @@ type MocQ<T extends object> = {
   generator: DataGenerator<T>
   count: number
   connections?: {
-    [key: string]: DataConnection<T>
+    [connectionKey: string]: DataConnection<T>
   }
   handler?: DataHandler<T>
 }`}
 </CodeBlock>
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+:::info Strict Type Checking
+
+when working with [TypeScript](https://www.typescriptlang.org/) it's best practice to utilize the `MocQ`
+type to explicitly type your configuration
+> without an explicit type `[mocq]` will attempt to infer the key type from the return of the generator function
+
+<Tabs>
+  <TabItem value="type" label="Create Custom Type" default>
+    <CodeBlock language="ts"
+      title="/index.ts"
+      showLineNumbers>
+      {`import { mocq, MocQ } from 'mocq';
+import { User, Node } from './types';
+
+type customMocqConfig: {
+  users: MocQ<User>,
+  nodes: MocQ<Node>,
+};
+
+const config: customMocqConfig = {
+  /* ... */
+};
+
+const { generate, execute } = mocq(config);`}
+    </CodeBlock>
+  </TabItem>
+  <TabItem value="assertion" label="Type Assertion">
+    <CodeBlock language="ts"
+      title="/index.ts"
+      showLineNumbers>
+      {`import { mocq, MocQ } from 'mocq';
+import { User, Node } from './types';
+
+const config = {
+  users: {
+    /* ... */
+  } as MocQ<User>,
+  nodes: {
+    /* ... */
+  } as MocQ<Node>,
+};
+
+const { generate, execute } = mocq(config);`}
+    </CodeBlock>
+  </TabItem>
+</Tabs>
+
+:::
+
 ### generator - `required`
 
-_synchronous_ function that returns an instance of a data object
+generic _synchronous_ function that returns a single instance of a data object
 
-> utilize the index for fields requiring uniqueness
+#### type
 
 <CodeBlock language="ts">
-  {`(index: number) => T`}
+  {`type DataGenerator<T> = (index: number) => T`}
 </CodeBlock>
+
+#### function parameters
+
+| name   |      description      |  type |
+|----------|:-------------:|------:|
+| `index` | index of current data object being created, utilize the index for fields requiring uniqueness | `number` |
 
 ### count - `required`
 
 number of desired data objects
+
+#### allowed values
 
 <CodeBlock language="ts">
   {`number > 0`}
@@ -43,22 +106,33 @@ number of desired data objects
 
 ### connections - `optional`
 
-key-value pairs allowing for the ability to _hook into the generated data of configuration with same key_ per instance of current data type
+key-value pairs allowing for the ability to _hook into the generated data of configuration by key_ and augment data per instance of current data type
 
-#### key
-> connection key must be present in top level config
-
-#### value
-
-> _synchronous_ function that returns a partial of a data object
-
-see [data resolution](/docs/#data-resolution) for more info 
+#### types
 
 <CodeBlock language="ts">
 {`{ 
-  [connectionKey: string]: (connectionKeyData: unknown[], index: number, indexData: T) => Partial<T>
+  [connectionKey: string]: DataConnection<T>
 }`}
 </CodeBlock>
+
+> `connectionKey` must be present in top level config
+
+<CodeBlock language="ts">
+{`type DataConnection<T> = (connectionKeyData: X[], index: number, indexData: T) => Partial<T>`}
+</CodeBlock>
+
+generic _synchronous_ function that returns a partial of a data object to be spread onto generated data
+
+> see [data resolution](/docs/#data-resolution) for more info 
+
+#### function parameters
+
+| name   |      description      |  type |
+|----------|:-------------:|------:|
+| `connectionKeyData` | [resolved data](/docs/#data-resolution) array for config key specified as the connection key, type will match the corresponding type of connection key data | `X[]` |
+| `index` | index of current data object being manipulated | `number` |
+| `indexData` | data of current data object being created | `T` |
 
 ### handler - `optional`
 
@@ -66,6 +140,20 @@ function to be ran when `execute` is called
 
 > can be _`sync`_ or _`async`_
 
+#### type
+
 <CodeBlock language="ts">
-  {`(data: T[]) => Promise<void> | void`}
+  {`type DataHandler<T> = (data: T[]) => Promise<void> | void`}
 </CodeBlock>
+
+#### function parameters
+
+| name   |      description      |  type |
+|----------|:-------------:|------:|
+| `data` | [resolved data](/docs/#data-resolution) array for config key | `T[]` |
+
+:::note need to utilize a common _connection/transaction_ between handlers?
+
+utilize same pattern used by the [Database Load Example](/docs/examples/database-load#database-load-function)
+
+:::

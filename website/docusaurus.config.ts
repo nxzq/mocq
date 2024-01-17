@@ -69,9 +69,19 @@ const config: Config = {
           label: 'Docs',
         },
         {
+          to: 'docs/tutorial',
+          position: 'left',
+          label: 'Tutorial',
+        },
+        {
           to: 'docs/examples',
           position: 'left',
           label: 'Examples',
+        },
+        {
+          to: 'docs/api',
+          position: 'left',
+          label: 'API',
         },
         {
           href: 'https://npmjs.com/package/mocq',
