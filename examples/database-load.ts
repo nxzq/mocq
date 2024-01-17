@@ -1,5 +1,7 @@
-import { mocq, MocQ } from "mocq"
-import { faker } from "@faker-js/faker"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { mocq, MocQ } from 'mocq'
+import { faker } from '@faker-js/faker'
 
 // in this example we are creating a workflow to load a library sql database
 
@@ -17,6 +19,7 @@ type DbConnection = {
 const getDbConnection = (): DbConnection => {
   return {
     write(...message: any[]) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       console.log('\x1b[1;34m[SQL]\x1b[0m', ...message)
     },
     close() {
@@ -105,9 +108,9 @@ const dbLoad = async (dbConnection: DbConnection) => {
       count: 10,
       connections: {
         // setting book publisher_id to an ID from a random publisher
-        publishers: (i: number, data: Publisher[])=>({ publisher_id: faker.helpers.arrayElement(data).id }),
+        publishers: (data: Publisher[])=>({ publisher_id: faker.helpers.arrayElement(data).id }),
         // setting book author_id to an ID from a random author
-        authors: (i: number, data: Author[])=>({ author_id: faker.helpers.arrayElement(data).id }),
+        authors: (data: Author[])=>({ author_id: faker.helpers.arrayElement(data).id }),
       },
       handler: (data: Book[]) => {
         data.forEach(x => dbConnection.write(`INSERT INTO books VALUES ('${x.id}', '${x.name}', '${x.publisher_id}', '${x.author_id}');`))
@@ -121,10 +124,10 @@ const dbLoad = async (dbConnection: DbConnection) => {
 /* database load */
 const loadDataBaseWithPseudoRandomData = async () => {
   // pre load step
-  const dbConnection = getDbConnection();
-  dbConnection.write(`CREATE TABLE publishers (id char, name char);`)
-  dbConnection.write(`CREATE TABLE authors (id char, first_name char, last_name char);`)
-  dbConnection.write(`CREATE TABLE books (id char, name char, author_id char, publisher_id char);`)
+  const dbConnection = getDbConnection()
+  dbConnection.write('CREATE TABLE publishers (id char, name char);')
+  dbConnection.write('CREATE TABLE authors (id char, first_name char, last_name char);')
+  dbConnection.write('CREATE TABLE books (id char, name char, author_id char, publisher_id char);')
   // mocq executed
   const { data: { publishers, authors, books }} = await dbLoad(dbConnection)
   // post load step

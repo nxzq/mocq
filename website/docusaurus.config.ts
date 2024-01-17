@@ -1,29 +1,21 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
-import type * as Preset from '@docusaurus/preset-classic';
+import {themes as prismThemes} from 'prism-react-renderer'
+import type {Config} from '@docusaurus/types'
+import type * as Preset from '@docusaurus/preset-classic'
 
 const config: Config = {
   title: 'mocq',
   tagline: 'data creation, connection & execution coordination utility',
   favicon: 'img/test-tube.png',
 
-  // Set the production url of your site here
   url: 'https://nxzq.github.io',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/mocq/',
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'nxzq', // Usually your GitHub org/user name.
-  projectName: 'mocq', // Usually your repo name.
+  organizationName: 'nxzq',
+  projectName: 'mocq',
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -35,8 +27,6 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/nxzq/mocq/tree/main/website/',
         },
@@ -117,6 +107,6 @@ const config: Config = {
       ],
     },
   } satisfies Preset.ThemeConfig,
-};
+}
 
-export default config;
+export default config

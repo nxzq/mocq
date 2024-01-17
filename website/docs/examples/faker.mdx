@@ -136,7 +136,7 @@ faker has many useful helper functions including `faker.helpers.arrayElement` wh
       count: 100,
       connections: {
         // highlight-next-line
-        companies: (i, data)=>({ company: faker.helpers.arrayElement(data).id })
+        companies: (data)=>({ company: faker.helpers.arrayElement(data).id })
       }
     },
     companies: {
@@ -156,7 +156,7 @@ faker has many useful helper functions including `faker.helpers.arrayElement` wh
       count: 100,
       connections: {
         // highlight-next-line
-        companies: (i: number, data: Company[])=>({ company: faker.helpers.arrayElement(data).id })
+        companies: (data: Company[])=>({ company: faker.helpers.arrayElement(data).id })
       }
     } as MocQ<User>,
     companies: {

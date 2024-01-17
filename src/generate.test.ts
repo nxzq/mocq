@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test'
 
 import { generate } from './generate'
 import { emphasisErrorText } from './logger'
+import { getErrorMessage } from './utils'
 
 type Node = { id: number, name: string }
 
@@ -11,7 +12,7 @@ const generator = (i: number): Node => ({
 })
 
 describe('[generator]', () => {
-  test("basic", () => {
+  test('basic', () => {
     const generator = (i: number): {_id: number, first_name: string, last_name: string} => ({
       _id: i,
       first_name: `first_name_${i}`,
@@ -30,8 +31,8 @@ describe('[generator]', () => {
     expect(res.node[0]._id).toBeNumber()
     expect(res.node[0].first_name).toBeString()
     expect(res.node[0].last_name).toBeString()
-  });
-  test("connections", () => {
+  })
+  test('connections', () => {
     const config = {
       node: {
         generator,
@@ -41,7 +42,7 @@ describe('[generator]', () => {
         generator,
         count: 2,
         connections: {
-          node: (i: number, data: Node[]) => ({ name: data.reverse()[0].name})
+          node: (nodes: Node[]) => ({ name: nodes.reverse()[0].name})
         }
       }
     }
@@ -53,7 +54,7 @@ describe('[generator]', () => {
     expect(node[1].name).toBeString()
     expect(node[1].name).toEqual(node2[0].name)
   })
-  test("chained connections", () => {
+  test('chained connections', () => {
     const config = {
       node: {
         generator,
@@ -63,14 +64,14 @@ describe('[generator]', () => {
         generator,
         count: 2,
         connections: {
-          node: (i: number, data: Node[]) => ({ name: data.reverse()[0].name})
+          node: (nodes: Node[]) => ({ name: nodes.reverse()[0].name})
         }
       },
       node3: {
         generator,
         count: 2,
         connections: {
-          node2: (i: number, data: Node[]) => ({ name: data[i].name})
+          node2: (nodes: Node[], i: number) => ({ name: nodes[i].name})
         }
       },
     }
@@ -84,13 +85,13 @@ describe('[generator]', () => {
     expect(node3[0].name).toEqual(node2[0].name)
     expect(node3[1].name).toEqual(node2[1].name)
   })
-  test("erroneous connection key", () => {
+  test('erroneous connection key', () => {
     const config = {
       node: {
         generator,
         count: 2,
         connections: {
-          user: (i: number, data: any[]) => ({ name: data[i]})
+          user: (users: unknown[], i: number) => ({ name: users[i]})
         }
       },
     }
@@ -99,24 +100,20 @@ describe('[generator]', () => {
     expect(node[0].id).toBeNumber()
 
   })
-  test("generator not returning object", () => {
+  test('generator not returning object', () => {
     const config = {
       node: {
         generator: (i: number) => i,
         count: 2,
-        connections: {
-          user: (i: number, data: any[]) => ({ name: data[i]})
-        }
       },
     }
     try {
-      // @ts-expect-error
       generate(config, ['node'])
-    } catch (e: Error | any) {
-      expect(e.message).toBe(`generator for key ${emphasisErrorText('node')} must return an object`)
+    } catch (e: unknown) {
+      expect(getErrorMessage(e)).toBe(`generator for key ${emphasisErrorText('node')} must return an object`)
     }
   })
-  test("connection not returning object", () => {
+  test('connection not returning object', () => {
     const config = {
       user: {
         generator,
@@ -126,15 +123,15 @@ describe('[generator]', () => {
         generator,
         count: 2,
         connections: {
-          user: (i: number, data: any[]) => 'data'
+          user: () => 'data'
         }
       },
     }
     try {
-      // @ts-expect-error
-      const data = generate(config, ['node'])
-    } catch (e: Error | any) {
-      expect(e.message).toBe(`${emphasisErrorText('node')} connection key ${emphasisErrorText('user')} must return an object`)
+      // @ts-expect-error 🧪 test config will error typescript compiler
+      generate(config, ['user', 'node'])
+    } catch (e: unknown) {
+      expect(getErrorMessage(e)).toBe(`${emphasisErrorText('node')} connection key ${emphasisErrorText('user')} must return an object`)
     }
   })
 })

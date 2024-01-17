@@ -5,5 +5,29 @@
     "src",
     "examples",
     "website"
-  ]
+  ],
+  "scripts": {
+    "build": "cd src && rm -rf dist && bun run build",
+    "lint": "npx eslint . --max-warnings 0 --fix",
+    "prepare": "husky install",
+    "test": "cd src && rm -rf dist && bun test --coverage"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.4",
+    "@commitlint/config-conventional": "^18.4.4",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.0",
+    "typescript": "^5.3.3"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "bun run lint"
+  }
 }

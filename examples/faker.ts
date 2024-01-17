@@ -1,5 +1,5 @@
-import { mocq } from "mocq"
-import { faker } from "@faker-js/faker"
+import { mocq } from 'mocq'
+import { faker } from '@faker-js/faker'
 
 const fakerUserGenerator = () => ({
   id: faker.string.uuid(),

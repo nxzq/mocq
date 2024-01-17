@@ -1,20 +1,20 @@
-import clsx from 'clsx';
-import Link from '@docusaurus/Link';
-import useBaseUrl from '@docusaurus/useBaseUrl';
-import ThemedImage from '@theme/ThemedImage';
-import CodeBlock from '@theme/CodeBlock';
-import styles from './styles.module.css';
+import clsx from 'clsx'
+import Link from '@docusaurus/Link'
+import useBaseUrl from '@docusaurus/useBaseUrl'
+import ThemedImage from '@theme/ThemedImage'
+import CodeBlock from '@theme/CodeBlock'
+import styles from './styles.module.css'
 
 export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
-      <div className={clsx('row', styles.heroRow)}>
-        <div className={clsx('col col--4', styles.heroCol)}>
-          <p>
+        <div className={clsx('row', styles.heroRow)}>
+          <div className={clsx('col col--4', styles.heroCol)}>
+            <p>
             Data models have many growing relationships, making the programmatic creation of traversable data sets cumbersome
-          </p>
-        </div>
+            </p>
+          </div>
           <ThemedImage
             alt="Data Relationships Graph"
             width='400'
@@ -35,18 +35,18 @@ export default function HomepageFeatures(): JSX.Element {
           />
           <div className={clsx('col col--4', styles.heroCol)}>
             <p><code>[mocq]</code> makes the process more transparent and extendable
-            <br/>
-            <br/>
+              <br/>
+              <br/>
             Data objects are configured in isolation as a series of <i><b>generator</b></i> and <i><b>connection</b></i> functions
-            <br/>
-            <br/>
+              <br/>
+              <br/>
             In any context, devs are only concerned with the parent connections, lightening the mental load
             </p>
           </div>
         </div>
         <div className={clsx('row', styles.heroRow)}>
           <div className={clsx('col col--4', styles.heroCol)}>
-          <p><code>[mocq]</code> derives the execution order from connections, flagging cyclic dependencies</p>
+            <p><code>[mocq]</code> derives the execution order from connections, flagging cyclic dependencies</p>
           </div>
           <ThemedImage
             alt="Execution Order Visual"
@@ -68,8 +68,8 @@ export default function HomepageFeatures(): JSX.Element {
           />
           <div className={clsx('col col--4', styles.heroCol)}>
             <p>Data is fully resolved before being passed to a connection function
-            <br />
-            <br />
+              <br />
+              <br />
             Allowing data to be defined once and cascade throughout the data model resulting in traversable datasets</p>
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function HomepageFeatures(): JSX.Element {
           </div>
           <div className={clsx('col col--4', styles.heroCol)}>
             <CodeBlock language="ts">
-              {`const { generate, execute } = mocq(customConfigObj);`}
+              {'const { generate, execute } = mocq(customConfigObj);'}
             </CodeBlock>
           </div>
         </div>
@@ -97,5 +97,5 @@ export default function HomepageFeatures(): JSX.Element {
         </div>
       </div>
     </section>
-  );
+  )
 }

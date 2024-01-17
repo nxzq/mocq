@@ -1,11 +1,11 @@
-import { mocq } from "mocq"
+import { mocq } from 'mocq'
 
-const getRandomArrElement = (data: any[]) => {
+const getRandomArrElement = <T>(data: T[]) => {
   return data[Math.floor(Math.random() * data.length)]
 }
 
-const getRandomArrElements = <T extends any>(data: T[], maxCount: number): T[] => {
-  return [...new Set(new Array(maxCount).fill('').map((x) => getRandomArrElement(data)))] as T[]
+const getRandomArrElements = <T>(data: T[], maxCount: number): T[] => {
+  return [...new Set(new Array(maxCount).fill('').map(() => getRandomArrElement(data)))] as T[]
 }
 
 type User = {
@@ -51,18 +51,18 @@ const { generate } = mocq({
   },
   tags: {
     generator: generateMockTag,
-      count: 25,
-      connections: {
-        users: (index: number, data: User[])=>({ created_by: getRandomArrElement(data).alias }),
-      }
+    count: 25,
+    connections: {
+      users: (users: User[])=>({ created_by: getRandomArrElement(users).alias }),
+    }
   },
   elements: {
     generator: generateMockElements,
-      count: 100,
-      connections: {
-        users: (index: number, data: User[])=>({ created_by: getRandomArrElement(data).alias }),
-        tags: (index: number, data: Tag[])=>({ tags: getRandomArrElements(data, 2).map(x => x.id) }),
-      }
+    count: 100,
+    connections: {
+      users: (users: User[])=>({ created_by: getRandomArrElement(users).alias }),
+      tags: (tags: Tag[])=>({ tags: getRandomArrElements(tags, 2).map(x => x.id) }),
+    }
   },
 })
 

@@ -182,15 +182,15 @@ const { generate } = mocq({
     generator: generateMockTag,
       count: 25,
       connections: {
-        users: (index, users)=>({ created_by: getRandomArrElement(users).alias }),
+        users: (users)=>({ created_by: getRandomArrElement(users).alias }),
       }
   },
   elements: {
     generator: generateMockElement,
       count: 100,
       connections: {
-        users: (index: number, users)=>({ created_by: getRandomArrElement(users).alias }),
-        tags: (index: number, tags)=>({ tags: getRandomArrElements(tags, 2).map(x => x.id) }),
+        users: (users)=>({ created_by: getRandomArrElement(users).alias }),
+        tags: (tags)=>({ tags: getRandomArrElements(tags, 2).map(x => x.id) }),
       }
   },
 });
@@ -217,15 +217,15 @@ const { generate } = mocq({
     generator: generateMockTag,
       count: 25,
       connections: {
-        users: (index: number, data: User[])=>({ created_by: getRandomArrElement(data).alias }),
+        users: (data: User[])=>({ created_by: getRandomArrElement(data).alias }),
       },
   } as MocQ<Tag>,
   elements: {
     generator: generateMockElement,
       count: 100,
       connections: {
-        users: (index: number, data: User[])=>({ created_by: getRandomArrElement(data).alias }),
-        tags: (index: number, data: Tag[])=>({ tags: getRandomArrElements(data, 2).map(x => x.id) }),
+        users: (data: User[])=>({ created_by: getRandomArrElement(data).alias }),
+        tags: (data: Tag[])=>({ tags: getRandomArrElements(data, 2).map(x => x.id) }),
       }
   } as MocQ<Element>,
 });

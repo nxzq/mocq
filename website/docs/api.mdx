@@ -13,7 +13,7 @@ import CodeBlock from '@theme/CodeBlock';
   [key: string]: MocQ<object>
 }
 
-type MocQ<T> = {
+type MocQ<T extends object> = {
   generator: DataGenerator<T>
   count: number
   connections?: {
@@ -45,15 +45,18 @@ number of desired data objects
 
 key-value pairs allowing for the ability to _hook into the generated data of configuration with same key_ per instance of current data type
 
+#### key
 > connection key must be present in top level config
+
+#### value
+
+> _synchronous_ function that returns a partial of a data object
 
 see [data resolution](/docs/#data-resolution) for more info 
 
-> function must be _`sync`_
-
 <CodeBlock language="ts">
 {`{ 
-  [connectionKey: string]: (index: number, connectionKeyData: unknown[]) => Partial<T>
+  [connectionKey: string]: (connectionKeyData: unknown[], index: number, indexData: T) => Partial<T>
 }`}
 </CodeBlock>
 

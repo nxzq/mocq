@@ -2,12 +2,12 @@ import { describe, expect, test } from 'bun:test'
 
 import * as mocqExports from '.'
 
-describe('[mocq]', async () => {
-  test("exports", () => {
+describe('[mocq]', () => {
+  test('exports', () => {
     expect(Object.keys(mocqExports).length).toBe(1)
     expect(mocqExports.mocq).toBeDefined()
-  });
-  test("example", async () => {
+  })
+  test('example', async () => {
     type User = {
       alias: string
       first_name: string
@@ -54,24 +54,24 @@ describe('[mocq]', async () => {
       },
       tags: {
         generator: tagDataSource,
-          count: 25,
-          connections: {
-            users: (index: number, data: User[])=>({ created_by: data[Math.floor(Math.random() * data.length)].alias }),
-          },
-          handler: async (data: Tag[]) => {
-            availableTags = data
-          },
+        count: 25,
+        connections: {
+          users: (users: User[])=>({ created_by: users[Math.floor(Math.random() * users.length)].alias }),
+        },
+        handler: (data: Tag[]) => {
+          availableTags = data
+        },
       },
       elements: {
         generator: elementDataSource,
-          count: 100,
-          connections: {
-            users: (index: number, data: User[])=>({ created_by: data[Math.floor(Math.random() * data.length)].alias }),
-            tags: (index: number, data: Tag[])=>({ tags: [...new Set([data[Math.floor(Math.random() * data.length)], data[Math.floor(Math.random() * data.length)]])] }),
-          },
-          handler: async (data: Element[]) => {
-            mockElementDataAccumulator = data;
-          },
+        count: 100,
+        connections: {
+          users: (users: User[])=>({ created_by: users[Math.floor(Math.random() * users.length)].alias }),
+          tags: (tags: Tag[])=>({ tags: [...new Set([tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * tags.length)]])] }),
+        },
+        handler: (data: Element[]) => {
+          mockElementDataAccumulator = data
+        },
       },
     }
     

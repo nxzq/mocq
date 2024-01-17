@@ -1,4 +1,4 @@
-import { mocq } from "mocq"
+import { mocq } from 'mocq'
 import jsonData from './data.json'
 
 const { generate } = mocq({

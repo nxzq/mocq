@@ -1,5 +1,5 @@
 import { logger, emphasisLogText, emphasisErrorText, mocqLogText } from './logger'
-import { Config } from "./types"
+import { Config } from './types'
 
 export const validate = <T>(config: T extends Config ? T : Config): Array<keyof typeof config> => {
   logger.info('validating config and determining execution order...')
@@ -27,7 +27,7 @@ export const validate = <T>(config: T extends Config ? T : Config): Array<keyof 
           logger.error(message(emphasisLogText))
           throw new Error(message(emphasisErrorText))
         }
-        const sampleGeneratorReturn = config[key].generator(0)
+        const sampleGeneratorReturn: unknown = config[key].generator(0)
         if (typeof sampleGeneratorReturn !== 'object') {
           const message = (emphasisFn: (x: string) => string) => `generator for key ${emphasisFn(String(key))} must return an object`
           logger.error(message(emphasisLogText))
@@ -48,7 +48,7 @@ export const validate = <T>(config: T extends Config ? T : Config): Array<keyof 
               logger.error(message(emphasisLogText))
               throw new Error(message(emphasisErrorText))
             }
-            const sampleConnectionReturn = config[key].connections![connectionKey](0, [config[key].generator(0)])
+            const sampleConnectionReturn = config[key].connections![connectionKey]([config[key].generator(0)], 0, [config[key].generator(0)])
             if (typeof sampleConnectionReturn !== 'object') {
               const message = (emphasisFn: (x: string) => string) => `${emphasisFn(String(key))} connection key ${emphasisFn(String(connectionKey))} must return an object`
               logger.error(message(emphasisLogText))

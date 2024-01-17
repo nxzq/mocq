@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const log = (...params: any): void => {
   {
     const verbose = (typeof process === 'undefined') ? false : process.env.MOCQ_VERBOSE

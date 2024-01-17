@@ -7,30 +7,36 @@ on:
     branches: [main]
 
 jobs:
-  install:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v1
-      - name: 🚀 Install
+      - name: 🚧 Install
         run: |
           bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline
+      - name: 📦 Build
+        run: |
+          bun run build
   test:
     runs-on: ubuntu-latest
-    needs: install
     steps:
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v1
+      - name: 🚧 Install
+        run: |
+          bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline
       - name: 🧪 Coverage
         run: |
-          cd src
-          bun test --coverage
+          bun run test
   examples:
     runs-on: ubuntu-latest
-    needs: install
     steps:
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v1
+      - name: 🚧 Install
+        run: |
+          bun i --ignore-scripts --no-audit --no-fund --no-progress --prefer-offline
       - name: 🧑‍🏫 Basic Usage Example
         run: |
           cd examples

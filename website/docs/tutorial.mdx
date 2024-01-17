@@ -205,7 +205,7 @@ Now we'll define our connection function, this function will assign a random `Us
     language="js"
     title="/connections.js"
     showLineNumbers>
-{`export const userCreatedNodeConnection = (i, users) => {
+{`export const userCreatedNodeConnection = (users) => {
   const randomIndex = Math.floor(Math.random() * users.length);
   return {
     createdBy: users[randomIndex].username,
@@ -220,7 +220,7 @@ Now we'll define our connection function, this function will assign a random `Us
     showLineNumbers>
 {`import { User, Node } from './types';
 
-export function userCreatedNodeConnection (i: number: data: User[]): Partial<Node> {
+export function userCreatedNodeConnection (data: User[]): Partial<Node> {
   const randomIndex = Math.floor(Math.random() * data.length);
   return {
     createdBy: data[randomIndex].username,
@@ -230,8 +230,10 @@ export function userCreatedNodeConnection (i: number: data: User[]): Partial<Nod
   </TabItem>
 </Tabs>
 
-Again this function is utilized at the `instance level`, we are given the `index` of the current `Node` instance being manipulated
-and the resolved data from the **`users`** config
+Again this function is utilized at the `instance level`, we are given the resolved data from the **`users`** config
+
+> we also have access to the `index` and the `data` of the current `Node` instance being manipulated 
+however those won't be needed in our example ([see API for full spec](docs/api#connections---optional))
 
 Let's add the connection to the **`nodes`** configuration under `connections` with the key **`users`** to enable the function to hook into the **`users`** config resolved data
 

@@ -166,9 +166,9 @@ const config = {
     count: 10,
     connections: {
       // setting book publisher_id to an ID from a random publisher
-      publishers: (i, publishers)=>({ publisher_id: faker.helpers.arrayElement(publishers).id }),
+      publishers: (publishers)=>({ publisher_id: faker.helpers.arrayElement(publishers).id }),
       // setting book author_id to an ID from a random author
-      authors: (i, authors)=>({ author_id: faker.helpers.arrayElement(authors).id }),
+      authors: (authors)=>({ author_id: faker.helpers.arrayElement(authors).id }),
     },
   },
 };
@@ -209,9 +209,9 @@ const config: customMocqConfig = {
     count: 10,
     connections: {
       // setting book publisher_id to an ID from a random publisher
-      publishers: (i: number, data: Publisher[])=>({ publisher_id: faker.helpers.arrayElement(data).id }),
+      publishers: (data: Publisher[])=>({ publisher_id: faker.helpers.arrayElement(data).id }),
       // setting book author_id to an ID from a random author
-      authors: (i: number, data: Author[])=>({ author_id: faker.helpers.arrayElement(data).id }),
+      authors: (data: Author[])=>({ author_id: faker.helpers.arrayElement(data).id }),
     },
   },
 };
@@ -360,8 +360,8 @@ const seedMockData = async (dbConnection) => {
       generator: generateMockBook,
       count: 10,
       connections: {
-        publishers: (i, publishers)=>({ publisher_id: faker.helpers.arrayElement(publishers).id }),
-        authors: (i, authors)=>({ author_id: faker.helpers.arrayElement(authors).id }),
+        publishers: (publishers)=>({ publisher_id: faker.helpers.arrayElement(publishers).id }),
+        authors: (authors)=>({ author_id: faker.helpers.arrayElement(authors).id }),
       },
       // highlight-start
       handler: (books) => {
@@ -445,8 +445,8 @@ async function seedMockData(dbConnection: DbConnection) {
       generator: generateMockBook,
       count: 10,
       connections: {
-        publishers: (i: number, data: Publisher[])=>({ publisher_id: faker.helpers.arrayElement(data).id }),
-        authors: (i: number, data: Author[])=>({ author_id: faker.helpers.arrayElement(data).id }),
+        publishers: (data: Publisher[])=>({ publisher_id: faker.helpers.arrayElement(data).id }),
+        authors: (data: Author[])=>({ author_id: faker.helpers.arrayElement(data).id }),
       },
       // highlight-start
       handler: (data: Book[]) => {
