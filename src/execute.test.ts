@@ -30,11 +30,11 @@ describe('[execute]', () => {
       elements: {
         generator: createNode,
         count: 2,
-        handler: (data: Node[]) => { acc = [...data] }
+        handler: (data: Node[]) => { acc = [ ...data ] }
       }
     }
 
-    await execute(mocqConfig, mockData, ['elements'])
+    await execute(mocqConfig, mockData, [ 'elements' ])
     expect(acc).toEqual(mockData.elements)
   })
   test('handles error in handler', async () => {
@@ -63,7 +63,7 @@ describe('[execute]', () => {
     }
 
     try {
-      await execute(mocqConfig, mockData, ['elements'])
+      await execute(mocqConfig, mockData, [ 'elements' ])
     } catch (e: unknown) {
       expect(getErrorMessage(e)).toBe('custom handler error')
     }
@@ -99,7 +99,7 @@ describe('[execute]', () => {
     }
 
     try {
-      await execute(mocqConfig, mockData, ['elements'])
+      await execute(mocqConfig, mockData, [ 'elements' ])
     } catch (e: unknown) {
       expect(getErrorMessage(e)).toBe('[object Object]')
     }

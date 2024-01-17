@@ -18,6 +18,9 @@ module.exports = {
     quotes: ['error', 'single'],
     '@typescript-eslint/quotes': ['error', 'single'],
     semi: ['error', 'never'],
-    '@typescript-eslint/semi': ['error', 'never']
+    '@typescript-eslint/semi': ['error', 'never'],
+    'eol-last': ['error', 'always'],
+    'array-bracket-spacing': ['error', 'always'],
+    'object-curly-spacing': ['error', 'always'],
   }
 };

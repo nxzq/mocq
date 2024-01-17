@@ -20,7 +20,7 @@ describe('[validation]', () => {
         count: 100,
         connections: {
           users: (users: Node[], i: number)=>({ name: users[Math.floor(Math.random() * users.length)].name+i }),
-          tags: (tags: Node[])=>({ tags: [...new Set([tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * tags.length)]])].map(x => x.name) }),
+          tags: (tags: Node[])=>({ tags: [ ...new Set([ tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * tags.length)] ]) ].map(x => x.name) }),
         }
       },
       tags: {
@@ -37,7 +37,7 @@ describe('[validation]', () => {
     }
     
     const order = validate(mocqConfig)
-    expect(order).toEqual(['users','tags','elements'])
+    expect(order).toEqual([ 'users','tags','elements' ])
   })
   test('self reference connection config', () => {
     const mocqConfig = {
@@ -62,7 +62,7 @@ describe('[validation]', () => {
         generator: generateNodeDataSource,
         count: 100,
         connections: {
-          tags: (tags: Node[])=>({ name: [...new Set([tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * tags.length)]])].map(x => x.name) }),
+          tags: (tags: Node[])=>({ name: [ ...new Set([ tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * tags.length)] ]) ].map(x => x.name) }),
         }
       },
       tags: {

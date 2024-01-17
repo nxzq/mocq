@@ -5,7 +5,7 @@ const getRandomArrElement = <T>(data: T[]) => {
 }
 
 const getRandomArrElements = <T>(data: T[], maxCount: number): T[] => {
-  return [...new Set(new Array(maxCount).fill('').map(() => getRandomArrElement(data)))] as T[]
+  return [ ...new Set(new Array(maxCount).fill('').map(() => getRandomArrElement(data))) ] as T[]
 }
 
 type User = {
@@ -66,7 +66,7 @@ const { generate } = mocq({
   },
 })
 
-const { data: { users, tags, elements} } = generate()
+const { data: { users, tags, elements } } = generate()
 
 console.log('users:')
 users.map(x => console.table(x))

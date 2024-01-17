@@ -8,7 +8,7 @@ import Heading from '@theme/Heading'
 import styles from './index.module.css'
 
 function HomepageHeader() {
-  const {siteConfig} = useDocusaurusContext()
+  const { siteConfig } = useDocusaurusContext()
   return (
     <header className={styles.heroBanner}>
       <div className="container">

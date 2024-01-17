@@ -67,7 +67,7 @@ describe('[mocq]', () => {
         count: 100,
         connections: {
           users: (users: User[])=>({ created_by: users[Math.floor(Math.random() * users.length)].alias }),
-          tags: (tags: Tag[])=>({ tags: [...new Set([tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * tags.length)]])] }),
+          tags: (tags: Tag[])=>({ tags: [ ...new Set([ tags[Math.floor(Math.random() * tags.length)], tags[Math.floor(Math.random() * tags.length)] ]) ] }),
         },
         handler: (data: Element[]) => {
           mockElementDataAccumulator = data
@@ -80,7 +80,7 @@ describe('[mocq]', () => {
     expect(data.users.length).toBe(25)
     expect(data.tags.length).toBe(25)
     expect(data.elements.length).toBe(100)
-    const { data: { tags, elements, users }} = await dbLoad.execute()
+    const { data: { tags, elements, users } } = await dbLoad.execute()
     expect(users.length).toBe(25)
     expect(tags.length).toBe(25)
     expect(elements.length).toBe(100)

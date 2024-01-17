@@ -26,7 +26,7 @@ describe('[generator]', () => {
       }
     }
 
-    const res = generate(config, ['node'])
+    const res = generate(config, [ 'node' ])
     expect(res.node).toHaveLength(1)
     expect(res.node[0]._id).toBeNumber()
     expect(res.node[0].first_name).toBeString()
@@ -42,11 +42,11 @@ describe('[generator]', () => {
         generator,
         count: 2,
         connections: {
-          node: (nodes: Node[]) => ({ name: nodes.reverse()[0].name})
+          node: (nodes: Node[]) => ({ name: nodes.reverse()[0].name })
         }
       }
     }
-    const { node, node2 } = generate(config, ['node', 'node2'])
+    const { node, node2 } = generate(config, [ 'node', 'node2' ])
     expect(node).toHaveLength(2)
     expect(node[0].id).toBeNumber()
     expect(node[0].name).toEqual(node2[1].name)
@@ -64,18 +64,18 @@ describe('[generator]', () => {
         generator,
         count: 2,
         connections: {
-          node: (nodes: Node[]) => ({ name: nodes.reverse()[0].name})
+          node: (nodes: Node[]) => ({ name: nodes.reverse()[0].name })
         }
       },
       node3: {
         generator,
         count: 2,
         connections: {
-          node2: (nodes: Node[], i: number) => ({ name: nodes[i].name})
+          node2: (nodes: Node[], i: number) => ({ name: nodes[i].name })
         }
       },
     }
-    const { node, node2, node3 } = generate(config, ['node', 'node2', 'node3'])
+    const { node, node2, node3 } = generate(config, [ 'node', 'node2', 'node3' ])
     expect(node).toHaveLength(2)
     expect(node[0].id).toBeNumber()
     expect(node[0].name).toEqual(node2[1].name)
@@ -91,11 +91,11 @@ describe('[generator]', () => {
         generator,
         count: 2,
         connections: {
-          user: (users: unknown[], i: number) => ({ name: users[i]})
+          user: (users: unknown[], i: number) => ({ name: users[i] })
         }
       },
     }
-    const { node } = generate(config, ['node'])
+    const { node } = generate(config, [ 'node' ])
     expect(node).toHaveLength(2)
     expect(node[0].id).toBeNumber()
 
@@ -108,7 +108,7 @@ describe('[generator]', () => {
       },
     }
     try {
-      generate(config, ['node'])
+      generate(config, [ 'node' ])
     } catch (e: unknown) {
       expect(getErrorMessage(e)).toBe(`generator for key ${emphasisErrorText('node')} must return an object`)
     }
@@ -129,7 +129,7 @@ describe('[generator]', () => {
     }
     try {
       // @ts-expect-error 🧪 test config will error typescript compiler
-      generate(config, ['user', 'node'])
+      generate(config, [ 'user', 'node' ])
     } catch (e: unknown) {
       expect(getErrorMessage(e)).toBe(`${emphasisErrorText('node')} connection key ${emphasisErrorText('user')} must return an object`)
     }

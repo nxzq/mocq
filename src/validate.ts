@@ -48,7 +48,7 @@ export const validate = <T>(config: T extends Config ? T : Config): Array<keyof 
               logger.error(message(emphasisLogText))
               throw new Error(message(emphasisErrorText))
             }
-            const sampleConnectionReturn = config[key].connections![connectionKey]([config[key].generator(0)], 0, [config[key].generator(0)])
+            const sampleConnectionReturn = config[key].connections![connectionKey]([ config[key].generator(0) ], 0, [ config[key].generator(0) ])
             if (typeof sampleConnectionReturn !== 'object') {
               const message = (emphasisFn: (x: string) => string) => `${emphasisFn(String(key))} connection key ${emphasisFn(String(connectionKey))} must return an object`
               logger.error(message(emphasisLogText))
