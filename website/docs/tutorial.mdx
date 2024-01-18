@@ -21,6 +21,7 @@ import CodeBlock from '@theme/CodeBlock';
   username: string
   email: string
 };
+
 type Node = {
   name: string
   createdBy: string
@@ -36,6 +37,7 @@ type Node = {
   username: string
   email: string
 };
+
 export type Node = {
   name: string
   createdBy: string
@@ -48,7 +50,7 @@ In this contrived example `Nodes` are created by `Users`
 
 **The goal of this tutorial will be:**
 - generate mock `Users` & `Nodes`
-- connect `Node` data with `User` data, ensuring every `Node` is created by a valid `User`
+- connect `Node` data with `User` data, ensuring every `Node` is created by a valid `User` in our data set
 - explore using handlers to do something with this resolved data
 
 ## Generating Data
