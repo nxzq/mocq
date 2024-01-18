@@ -1,9 +1,14 @@
 {
   "name": "mocq",
   "private": true,
+  "workspaces": [
+    "src"
+  ],
   "scripts": {
+    "build": "cd src && rm -rf dist && bun run build",
     "lint": "npx eslint . --max-warnings 0 --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "cd src && rm -rf dist && bun test --coverage"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.4",

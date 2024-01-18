@@ -1,2 +1,3 @@
+src/build.mjs linguist-vendored
 .husky/** linguist-vendored
 .eslintrc.cjs linguist-vendored
