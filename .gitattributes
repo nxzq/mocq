@@ -1,0 +1,5 @@
+website/** linguist-documentation
+examples/**  linguist-documentation
+src/build.mjs linguist-vendored
+.husky/** linguist-vendored
+.eslintrc.cjs linguist-vendored

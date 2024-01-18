@@ -1,0 +1,10 @@
+{
+  "label": "Examples",
+  "position": 3,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "examples utilizing mocq",
+    "slug": "examples"
+  }
+}

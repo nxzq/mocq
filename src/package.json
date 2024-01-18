@@ -1,0 +1,31 @@
+{
+  "name": "mocq",
+  "version": "0.1.0",
+  "module": "index.ts",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "cp ../README.md ./README.md && bun run ./build.mjs",
+    "prepublishOnly": "bun run build"
+  },
+  "license": "MIT",
+  "homepage": "https://nxzq.github.io/mocq/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nxzq/mocq.git"
+  },
+  "bugs": "https://github.com/nxzq/mocq/issues",
+  "author": "nxzq",
+  "keywords": ["mock", "testing-tool", "test-scaffolder"],
+  "devDependencies": {
+    "bun-types": "latest",
+    "bun-plugin-dts": "^0.2.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
