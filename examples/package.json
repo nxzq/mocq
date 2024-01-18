@@ -1,0 +1,19 @@
+{
+  "name": "mocq-examples",
+  "scripts": {
+    "example:basic": "bun basic.ts",
+    "example:database": "bun database-load.ts",
+    "example:faker": "bun faker.ts",
+    "example:static": "bun static.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.3.1",
+    "mocq": "workspace:*"
+  }
+}

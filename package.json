@@ -2,7 +2,8 @@
   "name": "mocq",
   "private": true,
   "workspaces": [
-    "src"
+    "src",
+    "examples"
   ],
   "scripts": {
     "build": "cd src && rm -rf dist && bun run build",
