@@ -3,3 +3,6 @@
 
 bun run test
 bun run build
+cd website
+bun run build
+cd ..

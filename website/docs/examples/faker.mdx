@@ -1,0 +1,173 @@
+---
+sidebar_position: 3
+title: "Usage with faker-js"
+description: "use faker to create pseudo random generators"
+---
+
+:::info
+
+[faker-js](https://fakerjs.dev/) is a popular library used to _"generate realistic data and not obvious fake data"_
+
+:::
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    ```js
+    import { mocq } from "mocq";
+    import { faker } from "@faker-js/faker";
+
+    const fakerUserGenerator = () => ({
+      id: faker.string.uuid(),
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
+      company: faker.company.name()
+    });
+
+    const { generate } = mocq({
+      users: {
+        generator: fakerUserGenerator,
+        count: 100,
+      }
+    });
+
+    const { data: { users } } = generate();
+    ```
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+  ```ts
+  import { mocq, MocQ } from "mocq";
+  import { faker } from "@faker-js/faker";
+
+  type User = {
+    id: string
+    first_name: string
+    last_name: string
+    company: string
+  };
+
+  const fakerUserGenerator = (): User => ({
+    id: faker.string.uuid(),
+    first_name: faker.person.firstName(),
+    last_name: faker.person.lastName(),
+    company: faker.company.name()
+  });
+
+  const { generate } = mocq({
+    users: {
+      generator: fakerUserGenerator,
+      count: 100,
+    } as MocQ<User>
+  });
+
+  const { data: { users } } = generate();
+  ```
+  </TabItem>
+</Tabs>
+
+<details>
+<summary>
+Sample Resolved Data
+</summary>
+`users`: 
+```js
+[
+  {
+    id: "c0d180fa-6933-4184-a503-dd96fb0b565a",
+    first_name: "Bonita",
+    last_name: "Orn",
+    company: "Lubowitz and Sons"
+  },
+  {
+    id: "f72f7c86-569d-4f35-bc66-b4df6b8b1a5e",
+    first_name: "Clara",
+    last_name: "Dickinson",
+    company: "Kihn LLC"
+  },
+  {
+    id: "6232f606-56ba-4f2e-8e2d-367685731379",
+    first_name: "Bell",
+    last_name: "Douglas",
+    company: "Ledner LLC"
+  },
+  // ... 97 more entries
+]
+```
+</details>
+
+:::warning
+
+when generating unique fields, consider creating a string literal with the index when not using `faker.string.uuid`
+as faker will duplicate random values in large enough data sets
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    ```js
+    const fakerCompanyGenerator = (i) => ({
+      // highlight-next-line
+      company: `${faker.company.name()} (${i})`
+    });
+    ```
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    ```ts
+    const fakerCompanyGenerator = (i: number): Company => ({
+      // highlight-next-line
+      company: `${faker.company.name()} (${i})`
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+:::
+
+:::tip
+
+faker has many useful helper functions including `faker.helpers.arrayElement` which grabs a random value from an array, it works great as connection function if the desired result is that the data is simply connected in some way
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+  ```js
+  const { generate } = mocq({
+    users: {
+      generator: fakerUserGenerator,
+      count: 100,
+      connections: {
+        // highlight-next-line
+        companies: (data)=>({ company: faker.helpers.arrayElement(data).id })
+      }
+    },
+    companies: {
+      generator: fakerCompanyGenerator,
+      count: 25
+    }
+  });
+
+  const { data: { users, companies } } = generate();
+  ```
+  </TabItem>
+  <TabItem value="ts" label="TypeScript">
+  ```ts
+  const { generate } = mocq({
+    users: {
+      generator: fakerUserGenerator,
+      count: 100,
+      connections: {
+        // highlight-next-line
+        companies: (data: Company[])=>({ company: faker.helpers.arrayElement(data).id })
+      }
+    } as MocQ<User>,
+    companies: {
+      generator: fakerCompanyGenerator,
+      count: 25
+    } as MocQ<Company>
+  });
+
+  const { data: { users, companies } } = generate();
+  ```
+  </TabItem>
+</Tabs>
+
+:::
