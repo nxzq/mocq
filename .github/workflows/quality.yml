@@ -47,6 +47,16 @@ jobs:
           cd examples
           echo "code: https://github.com/nxzq/mocq/blob/main/examples/database-load.ts"
           bun run example:database
+      - name: 🧑‍🏫 Test Assertion in Handler Example
+        run: |
+          cd examples
+          echo "code: https://github.com/nxzq/mocq/blob/main/examples/assert.test.ts"
+          bun run example:assert
+      - name: 🧑‍🏫 Static Data Example
+        run: |
+          cd examples
+          echo "code: https://github.com/nxzq/mocq/blob/main/examples/static.ts"
+          bun run example:static
       - name: 🧑‍🏫 faker-js Example
         run: |
           cd examples
@@ -57,8 +67,3 @@ jobs:
           cd examples
           echo "code: https://github.com/nxzq/mocq/blob/main/examples/zod.ts"
           bun run example:zod
-      - name: 🧑‍🏫 Static Data Example
-        run: |
-          cd examples
-          echo "code: https://github.com/nxzq/mocq/blob/main/examples/static.ts"
-          bun run example:static

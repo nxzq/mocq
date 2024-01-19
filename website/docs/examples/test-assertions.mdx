@@ -1,0 +1,88 @@
+---
+sidebar_position: 3
+title: "Test Assertions in Handler"
+description: "run test assertions during execution"
+---
+
+:::note When would I want to do this?
+
+typically when using `[mocq]` to build out a long lived test, something like an integration test, you'll want the handler to 
+run some kind of create function with the generated data _then_ query and assert
+> this is useful when building out workflow where data will change during the `[mocq]` execution
+> allowing for asserting on intermediate values
+> (something like a `create` > `edit` > `delete` > `recreate`)
+
+:::
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="code-block-language">
+  <TabItem value="js" label="JavaScript">
+    ```js
+    import { expect, test } from 'bun:test';
+
+    import { mocq } from 'mocq';
+
+    test('asserting in mocq handler', async () => {
+      const count = 1;
+
+      const { execute } = mocq({
+        nodes: {
+          generator: (i) => ({ index: i }),
+          count,
+          handler: (nodes) => {
+            expect(true).toEqual(true);
+            expect(nodes.length).toEqual(count);
+            expect(nodes[0]).toEqual({ index: 0 });
+          },
+        };
+      });
+      
+      const { data: { nodes } } = await execute();
+    });
+    ```
+    </TabItem>
+  <TabItem value="ts" label="TypeScript">
+    ```ts
+    import { expect, test } from 'bun:test';
+
+    import { mocq } from 'mocq';
+
+    test('asserting in mocq handler', async () => {
+      const count = 1;
+
+      const { execute } = mocq({
+        nodes: {
+          generator: (i: number) => ({ index: i }),
+          count,
+          handler: (data: {index: number}[]) => {
+            expect(true).toEqual(true);
+            expect(data.length).toEqual(count);
+            expect(data[0]).toEqual({ index: 0 });
+          },
+        };
+      });
+      
+      const { data: { nodes } } = await execute();
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+<details>
+<summary>
+Test Output
+</summary>
+```bash
+bun test v1.0.13 (f5bf67bd)
+
+assert.test.ts:
+✓ asserting in mocq handler [1.67ms]
+
+ 1 pass
+ 0 fail
+ 3 expect() calls
+Ran 1 tests across 1 files. [24.00ms]
+```
+</details>

@@ -1,6 +1,7 @@
 {
   "name": "mocq-examples",
   "scripts": {
+    "example:assert": "bun test assert.test.ts",
     "example:basic": "bun basic.ts",
     "example:database": "bun database-load.ts",
     "example:faker": "bun faker.ts",
