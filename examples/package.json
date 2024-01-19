@@ -4,7 +4,8 @@
     "example:basic": "bun basic.ts",
     "example:database": "bun database-load.ts",
     "example:faker": "bun faker.ts",
-    "example:static": "bun static.ts"
+    "example:static": "bun static.ts",
+    "example:zod": "bun zod.ts"
   },
   "devDependencies": {
     "bun-types": "latest"
@@ -13,7 +14,9 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@anatine/zod-mock": "^3.13.3",
     "@faker-js/faker": "^8.3.1",
-    "mocq": "workspace:*"
+    "mocq": "workspace:*",
+    "zod": "^3.22.4"
   }
 }
