@@ -1,4 +1,4 @@
-import { mocq } from 'mocq'
+import { MocQ, mocq } from 'mocq'
 import { z } from 'zod'
 import { generateMock } from '@anatine/zod-mock'
 
@@ -16,13 +16,15 @@ const schema = z.object({
   age: z.number().min(18).max(120),
 })
 
+type Type = z.infer<typeof schema>
+
 const { generate } = mocq({
-  users: {
+  mocks: {
     generator: () => generateMock(schema),
     count: 100,
-  }
+  } as MocQ<Type>
 })
 
-const { data: { users } } = generate()
+const { data: { mocks } } = generate()
 
-users.map(x => console.table(x))
+mocks.map(x => console.table(x))
