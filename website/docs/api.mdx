@@ -4,7 +4,7 @@ description: mocq's api
 sidebar_position: 4
 ---
 
-> `[mocq]` configuration spec
+> `[mocq]` configuration syntax
 
 ## Config
 
@@ -32,22 +32,25 @@ import TabItem from '@theme/TabItem';
 :::info Strict Type Checking
 
 when working with [TypeScript](https://www.typescriptlang.org/) it's best practice to utilize the `MocQ`
-type to explicitly type your configuration
-> without an explicit type `[mocq]` will attempt to infer the key type from the return of the generator function
+type to explicitly type your data object configurations
+> without an explicit type `[mocq]` will attempt to infer the key data object type, if it cannot `unknown` will be used
 
 <Tabs>
-  <TabItem value="type" label="Create Custom Type" default>
+  <TabItem value="explicit" label="Explicit Type (recommended)" default>
     <CodeBlock language="ts"
       title="/index.ts"
       showLineNumbers>
       {`import { mocq, MocQ } from 'mocq';
 import { User, Node } from './types';
 
+// highlight-start
 type customMocqConfig: {
   users: MocQ<User>,
   nodes: MocQ<Node>,
 };
+// highlight-end
 
+// highlight-next-line
 const config: customMocqConfig = {
   /* ... */
 };
@@ -65,9 +68,11 @@ import { User, Node } from './types';
 const config = {
   users: {
     /* ... */
+    // highlight-next-line
   } as MocQ<User>,
   nodes: {
     /* ... */
+    // highlight-next-line
   } as MocQ<Node>,
 };
 
@@ -85,7 +90,7 @@ generic _synchronous_ function that returns a single instance of a data object
 #### type
 
 <CodeBlock language="ts">
-  {`type DataGenerator<T> = (index: number) => T`}
+  {`type DataGenerator<T extends object> = (index: number) => T`}
 </CodeBlock>
 
 #### function parameters
@@ -119,7 +124,7 @@ key-value pairs allowing for the ability to _hook into the generated data of con
 > `connectionKey` must be present in top level config
 
 <CodeBlock language="ts">
-{`type DataConnection<T> = (connectionKeyData: X[], index: number, indexData: T) => Partial<T>`}
+{`type DataConnection<T extends object> = (connectionKeyData: X[], index: number, indexData: T) => Partial<T>`}
 </CodeBlock>
 
 generic _synchronous_ function that returns a partial of a data object to be spread onto generated data
@@ -143,7 +148,7 @@ function to be ran when `execute` is called
 #### type
 
 <CodeBlock language="ts">
-  {`type DataHandler<T> = (data: T[]) => Promise<void> | void`}
+  {`type DataHandler<T extends object> = (data: T[]) => Promise<void> | void`}
 </CodeBlock>
 
 #### function parameters
