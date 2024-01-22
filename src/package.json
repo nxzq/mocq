@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "cp ../README.md ./README.md && bun run ./build.mjs",
+    "build": "bun run ./build.mjs",
     "prepublishOnly": "bun run build"
   },
   "license": "MIT",
