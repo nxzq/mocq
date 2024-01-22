@@ -146,8 +146,8 @@ import { generateMockUser, generateMockNode } from './generators';
 
 // create a custom config type for strict type checking
 type customMocqConfig: {
-  users: MocQ<User>,
-  nodes: MocQ<Node>,
+  users: MocQ<User>
+  nodes: MocQ<Node>
 };
 
 const config: customMocqConfig = {
@@ -284,8 +284,8 @@ import { userCreatedNodeConnection } from './connections';
 
 // create a custom config type for strict type checking
 type customMocqConfig: {
-  users: MocQ<User>,
-  nodes: MocQ<Node>,
+  users: MocQ<User>
+  nodes: MocQ<Node>
 };
 
 const config: customMocqConfig = {
@@ -389,6 +389,7 @@ handler functions can be `sync` or `async`
 </Tabs>
 
 Now lets add this handler to our configuration
+> we'll flip the order of our keys to show the execution order coordination in action
 
 <Tabs groupId="code-block-language">
   <TabItem value="js" label="JavaScript">
@@ -403,19 +404,19 @@ import { userCreatedNodeConnection } from './connections';
 import { logHandler } from './handlers';
 
 const config = {
-  users: {
-    generator: generateMockUser,
-    count: 25,
-    // highlight-start
-    handler: logHandler,
-    // highlight-end
-  },
   nodes: {
     generator: generateMockNode,
     count: 100,
     connections: {
       users: userCreatedNodeConnection,
     };
+    // highlight-start
+    handler: logHandler,
+    // highlight-end
+  },
+  users: {
+    generator: generateMockUser,
+    count: 25,
     // highlight-start
     handler: logHandler,
     // highlight-end
@@ -441,24 +442,24 @@ import { logHandler } from './handlers';
 
 // create a custom config type for strict type checking
 type customMocqConfig: {
-  users: MocQ<User>,
-  nodes: MocQ<Node>,
+  nodes: MocQ<Node>
+  users: MocQ<User>
 };
 
 const config: customMocqConfig = {
-  users: {
-    generator: generateMockUser,
-    count: 25,
-    // highlight-start
-    handler: logHandler,
-    // highlight-end
-  },
   nodes: {
     generator: generateMockNode,
     count: 100,
     connections: {
       users: userCreatedNodeConnection,
     };
+    // highlight-start
+    handler: logHandler,
+    // highlight-end
+  },
+  users: {
+    generator: generateMockUser,
+    count: 25,
     // highlight-start
     handler: logHandler,
     // highlight-end
