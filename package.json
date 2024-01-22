@@ -8,6 +8,9 @@
   ],
   "scripts": {
     "build": "cd src && rm -rf dist && bun run build",
+    "docs": "cd website && bun start",
+    "docs:build": "cd website && bun run build",
+    "docs:serve": "cd website && bun run serve",
     "lint": "npx eslint . --max-warnings 0 --fix",
     "prepare": "husky install",
     "test": "cd src && rm -rf dist && bun test --coverage"
