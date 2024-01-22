@@ -1,10 +1,10 @@
-import { Config } from './types'
+import { Config, inferMocQGeneric } from './types'
 import { logger, emphasisLogText } from './logger'
 import { getErrorMessage } from './utils'
 
 export const execute = async <T extends Config>(
   config: T,
-  data: { [K in keyof T]: ReturnType<T[K]['generator']>[]; },
+  data: { [K in keyof T]: inferMocQGeneric<T[K]>[]; },
   executionOrder: Array<keyof typeof config>
 ): Promise<void> => {
   logger.info('data execution init...')

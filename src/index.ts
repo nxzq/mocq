@@ -6,8 +6,7 @@ import { Config } from './types'
 export * from './types'
 /** 
  * data creation, connection & execution coordination utility
- * 
- * {@link [[mocq] documentation](https://nxzq.github.io/mocq/)} 
+ * @docs [[mocq] documentation](https://nxzq.github.io/mocq/) 
 */
 export const mocq = <T>(config: T extends Config ? T : Config) => {
   const keys = validate(config)
