@@ -8,8 +8,8 @@ description: "run test assertions during handler execution"
 
 typically when using `[mocq]` to build out a long lived test, something like an integration test, you'll want the handler to 
 run some kind of create function with the generated data _then_ query and assert
-> this is useful when building out workflow where data will change during the `[mocq]` execution
-> allowing for asserting on intermediate values
+> this is useful when building out a workflow where data in the data store will change during the `[mocq]` execution,
+> allowing for assertions on intermediate values
 > (something like a `create` > `edit` > `delete` > `recreate`)
 
 :::
