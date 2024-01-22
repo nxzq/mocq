@@ -62,7 +62,7 @@ const customConfigObj = {
   myCustomKey: {
     generator: // a function to create a myCustomKey node
     count: // the number of myCustomKey nodes wanted
-    connections?: // ability to hook into resolved data from other keys in config & ammend myCustomKey data
+    connections?: // ability to hook into resolved data from other keys in config & amend myCustomKey data
     handler?: // ability to execute functions against myCustomKey resolved data
   },
   myCustomKey2: { 
@@ -80,7 +80,7 @@ Go through the [Tutorial](/docs/tutorial), checkout the [API](/docs/api) or brow
 
 ### Data Resolution
 
-Use connections to ammend generated data with data generated via another key in the top level configuration
+Use connections to amend generated data with data generated via another key in the top level configuration
 
 Data is fully resolved before being passed to a connection function
 > meaning the data you're handed in a connection function is the same data 
