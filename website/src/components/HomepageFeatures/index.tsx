@@ -37,10 +37,10 @@ export default function HomepageFeatures(): JSX.Element {
             <p><code>[mocq]</code> makes the process more transparent and extendable
               <br/>
               <br/>
-            Data objects are configured in isolation as a series of <i><b>generator</b></i> and <i><b>connection</b></i> functions
+            Data objects are configured in isolation as a series of generic <i><b>generator</b></i> and <i><b>connection</b></i> functions
               <br/>
               <br/>
-            In any context, devs are only concerned with the parent connections, lightening the mental load
+            In any context, devs are only concerned with immediate parent connections, lightening the mental load
             </p>
           </div>
         </div>
@@ -77,12 +77,12 @@ export default function HomepageFeatures(): JSX.Element {
           <div className={clsx('col col--4', styles.heroCol)}>
             <p>
               <Link to='docs/#generate'><code>generate</code></Link> data on the fly or add <i><b>handler</b></i> functions to the configuration
-              and <Link to='docs/#execute'><code>execute</code></Link> against generated data utilizing derived execution order to ensure data is there
+              and <Link to='docs/#execute'><code>execute</code></Link> against generated data utilizing derived execution order
             </p>
           </div>
           <div className={clsx('col col--4', styles.heroCol)}>
             <CodeBlock language="ts">
-              {'const { generate, execute } = mocq(customConfigObj);'}
+              {'const { generate, execute } = mocq(config);'}
             </CodeBlock>
           </div>
         </div>

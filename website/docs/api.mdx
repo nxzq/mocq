@@ -11,11 +11,15 @@ sidebar_position: 4
 import CodeBlock from '@theme/CodeBlock';
 
 <CodeBlock language="ts">
-  {`/** @see MocQ for implementation details */
+  {`/** 
+* generic configuration interface
+* @see MocQ for implementation details
+*/
 interface Config {
   [key: string]: MocQ<object>
 }
 
+/** data object configuration syntax */
 type MocQ<T extends object> = {
   generator: DataGenerator<T>
   count: number
