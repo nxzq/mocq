@@ -1,11 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-/** @see MocQ for implementation details */
+/** 
+ * generic configuration interface 
+ * @see MocQ for implementation details
+ * @docs [[mocq] documentation](https://nxzq.github.io/mocq/) 
+*/
 export interface Config {
   [key: string]: MocQ<any>
 }
 
-/** {@link [[mocq] API documentation](https://nxzq.github.io/mocq/docs/api)} */
+/** 
+ * data object configuration syntax
+ * @docs [[mocq] API documentation](https://nxzq.github.io/mocq/docs/api)
+ * @example
+ * ```typescript
+ * type User = {
+ *   name: string
+ * };
+ * 
+ * type mocqConfig = {
+ *    users: MocQ<User>
+ * };
+ * 
+ * const config: mocqConfig = {
+ *   users: {
+ *     // ...
+ *   }
+ * };
+ * 
+ * const { generate, execute } = mocq(config);
+ * ```
+*/
 export type MocQ<T extends object> = {
   generator: DataGenerator<T>
   count: number
@@ -15,11 +40,30 @@ export type MocQ<T extends object> = {
   handler?: DataHandler<T>
 }
 
-/** {@link [[mocq] API documentation](https://nxzq.github.io/mocq/docs/api#generator---required)} */
-export type DataGenerator<T> = (index: number) => T
+/** 
+ * infer base data object type from MocQ configuration type 
+ * @see MocQ for implementation details 
+ * @docs [[mocq] documentation](https://nxzq.github.io/mocq/) 
+*/
+export type inferMocQGeneric<X> = X extends MocQ<infer T> ? T : unknown
 
-/** {@link [[mocq] API documentation](https://nxzq.github.io/mocq/docs/api#connections---optional)} */
-export type DataConnection<T> = (connectionKeyData: any[], index: number, indexData: T) => Partial<T>
+/** 
+ * generic function to create an instance of data object
+ * @see MocQ for implementation details 
+ * @docs [[mocq] API documentation](https://nxzq.github.io/mocq/docs/api#generator---required) 
+*/
+export type DataGenerator<T extends object> = (index: number) => T
 
-/** {@link [[mocq] API documentation](https://nxzq.github.io/mocq/docs/api#handler---optional)} */
-export type DataHandler<T> = (data: T[]) => Promise<void> | void
+/** 
+ * generic function to amend an instance of data object
+ * @see MocQ for implementation details 
+ * @docs [[mocq] API documentation](https://nxzq.github.io/mocq/docs/api#connections---optional)
+*/
+export type DataConnection<T extends object> = (connectionKeyData: any[], index: number, indexData: T) => Partial<T>
+
+/** 
+ * function to run against generated data when `execute()` is invoked
+ * @see MocQ for implementation details 
+ * @docs [[mocq] API documentation](https://nxzq.github.io/mocq/docs/api#handler---optional)
+*/
+export type DataHandler<T extends object> = (data: T[]) => Promise<void> | void

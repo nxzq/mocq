@@ -1,21 +1,23 @@
 import { logger, emphasisLogText, emphasisErrorText, muteLogText } from './logger'
-import { Config } from './types'
+import { Config, MocQ, inferMocQGeneric } from './types'
 
 export const generate = <T extends Config>(
   config: T,
   executionOrder: Array<keyof typeof config>
-): { [K in keyof T]: ReturnType<T[K]['generator']>[] } => {
+): { [K in keyof T]: inferMocQGeneric<T[K]>[] } => {
   logger.info('data generation init...')
-  const result: { [K in keyof T]: ReturnType<T[K]['generator']>[] } = {} as { [K in keyof T]: ReturnType<T[K]['generator']>[] }
+  const result = {} as { [K in keyof T]: inferMocQGeneric<T[K]>[] }
 
   for(const key of executionOrder) {
     logger.system('generation', String(key))
     
-    const { generator, count, connections } = config[key ]
-    const data: ReturnType<T[typeof key]['generator']>[] = []
+    const configuration = config[key]
+    type DataType = inferMocQGeneric<typeof configuration>
+    const { generator, count, connections } = configuration as MocQ<DataType>
+    const data = []
 
     for(let i = 0; i < count; i++) {
-      const generatedData = generator(i) as ReturnType<T[typeof key]['generator']>
+      const generatedData = generator(i)
       if (typeof generatedData !== 'object') {
         const message = (emphasisFn: (x: string) => string) => `generator for key ${emphasisFn(String(key))} must return an object`
         logger.error(message(emphasisLogText))
@@ -23,7 +25,7 @@ export const generate = <T extends Config>(
       }
 
       if (connections) {
-        let mergedData = { ...generatedData } as ReturnType<T[typeof key]['generator']>
+        let mergedData = { ...generatedData }
         for (const connectionKey in connections) {
           i==0&&logger.system('connection', `${connectionKey} ➜ ${String(key)}`)
           if (!(connectionKey in config)) {
@@ -36,16 +38,16 @@ export const generate = <T extends Config>(
               logger.error(message(emphasisLogText))
               throw new Error(message(emphasisErrorText))
             }
-            mergedData = { ...mergedData, ...connectionData } as ReturnType<T[typeof key]['generator']>
+            mergedData = { ...mergedData, ...connectionData }
           }
         }
         data.push(mergedData)
       } else {
-        data.push(generatedData as ReturnType<T[typeof key]['generator']>)
+        data.push(generatedData)
       }
     }
 
-    result[key ] = data 
+    result[key] = data 
   }
   logger.success('data generation complete')
   return result

@@ -97,8 +97,8 @@ describe('[generator]', () => {
     }
     const { node } = generate(config, [ 'node' ])
     expect(node).toHaveLength(2)
+    // @ts-expect-error 🧪 test config will error typescript compiler
     expect(node[0].id).toBeNumber()
-
   })
   test('generator not returning object', () => {
     const config = {
