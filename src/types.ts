@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /** 
+ * @deprecated use {@link MocQ} type for each individual key instead
  * generic configuration interface 
  * @see MocQ for implementation details
  * @docs [[mocq] documentation](https://nxzq.github.io/mocq/) 
 */
 export interface Config {
-  [key: string]: MocQ<any>
+  [key: string]: MocQ<object>
 }
 
 /** 
@@ -45,7 +46,7 @@ export type MocQ<T extends object> = {
  * @see MocQ for implementation details 
  * @docs [[mocq] documentation](https://nxzq.github.io/mocq/) 
 */
-export type inferMocQGeneric<X> = X extends MocQ<infer T> ? T : unknown
+export type InferMocQGeneric<X extends object> = X extends MocQ<infer T> ? T : object
 
 /** 
  * generic function to create an instance of data object
@@ -55,14 +56,14 @@ export type inferMocQGeneric<X> = X extends MocQ<infer T> ? T : unknown
 export type DataGenerator<T extends object> = (index: number) => T
 
 /** 
- * generic function to amend an instance of data object
+ * generic function to amend an instance of data object with data from another data object
  * @see MocQ for implementation details 
  * @docs [[mocq] API documentation](https://nxzq.github.io/mocq/docs/api#connections---optional)
 */
 export type DataConnection<T extends object> = (connectionKeyData: any[], index: number, indexData: T) => Partial<T>
 
 /** 
- * function to run against generated data when `execute()` is invoked
+ * function to run against resolved data when `execute()` is invoked
  * @see MocQ for implementation details 
  * @docs [[mocq] API documentation](https://nxzq.github.io/mocq/docs/api#handler---optional)
 */

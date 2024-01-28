@@ -108,6 +108,7 @@ describe('[generator]', () => {
       },
     }
     try {
+      // @ts-expect-error 🧪 test config will error typescript compiler
       generate(config, [ 'node' ])
     } catch (e: unknown) {
       expect(getErrorMessage(e)).toBe(`generator for key ${emphasisErrorText('node')} must return an object`)
