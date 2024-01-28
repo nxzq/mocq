@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /** 
- * @deprecated use {@link MocQ} type for each individual key instead
+ * @deprecated build a custom config type using the {@link MocQ} type for each individual key instead
+ * 
  * generic configuration interface 
  * @see MocQ for implementation details
  * @docs [[mocq] documentation](https://nxzq.github.io/mocq/) 
