@@ -30,7 +30,7 @@ describe('[execute]', () => {
       elements: {
         generator: createNode,
         count: 2,
-        handler: (data: Node[]) => { acc = [ ...data ] }
+        handler: ((data: Node[]) => { acc = [ ...data ] })
       }
     }
 

@@ -1,19 +1,18 @@
 import { logger, emphasisLogText, emphasisErrorText, muteLogText } from './logger'
-import { Config, MocQ, inferMocQGeneric } from './types'
+import { MocQ, InferMocQGeneric } from './types'
 
-export const generate = <T extends Config>(
+export const generate = <T extends { [K in keyof T]: MocQ<InferMocQGeneric<T[K]>> }>(
   config: T,
-  executionOrder: Array<keyof typeof config>
-): { [K in keyof T]: inferMocQGeneric<T[K]>[] } => {
+  executionOrder: Array<keyof T>
+): { [K in keyof T]: InferMocQGeneric<T[K]>[] } => {
   logger.info('data generation init...')
-  const result = {} as { [K in keyof T]: inferMocQGeneric<T[K]>[] }
+  const result = {} as { [K in keyof T]: InferMocQGeneric<T[K]>[] }
 
   for(const key of executionOrder) {
     logger.system('generation', String(key))
     
     const configuration = config[key]
-    type DataType = inferMocQGeneric<typeof configuration>
-    const { generator, count, connections } = configuration as MocQ<DataType>
+    const { generator, count, connections } = configuration as MocQ<InferMocQGeneric<typeof configuration>>
     const data = []
 
     for(let i = 0; i < count; i++) {

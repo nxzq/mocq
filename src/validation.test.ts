@@ -142,6 +142,7 @@ describe('[validation]', () => {
     }
     
     try {
+      // @ts-expect-error 🧪 test config will error typescript compiler
       validate(mocqConfig)
     } catch (e: unknown) {
       expect(getErrorMessage(e)).toBe(`generator for key ${emphasisErrorText('elements')} must return an object`)
