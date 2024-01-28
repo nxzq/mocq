@@ -6,20 +6,14 @@ sidebar_position: 4
 
 > `[mocq]` configuration syntax
 
-## Config
+## MocQ
+
+`[mocq]` configuration for an individual data object type
 
 import CodeBlock from '@theme/CodeBlock';
 
 <CodeBlock language="ts">
-  {`/** 
-* generic configuration interface
-* @see MocQ for implementation details
-*/
-interface Config {
-  [key: string]: MocQ<object>
-}
-
-/** data object configuration syntax */
+  {`/** data object configuration syntax */
 type MocQ<T extends object> = {
   generator: DataGenerator<T>
   count: number
@@ -37,7 +31,7 @@ import TabItem from '@theme/TabItem';
 
 when working with [TypeScript](https://www.typescriptlang.org/) it's best practice to utilize the `MocQ`
 type to explicitly type your data object configurations
-> without an explicit type `[mocq]` will attempt to infer the key data object type, if it cannot `unknown` will be used
+> without an explicit type `[mocq]` will attempt to infer the key data object type, if it cannot `object` will be used
 
 <Tabs>
   <TabItem value="explicit" label="Explicit Type (recommended)" default>
