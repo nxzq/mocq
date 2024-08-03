@@ -145,7 +145,7 @@ import { User, Node } from './types';
 import { generateMockUser, generateMockNode } from './generators';
 
 // create a custom config type for strict type checking
-type customMocqConfig: {
+type customMocqConfig = {
   users: MocQ<User>
   nodes: MocQ<Node>
 };
@@ -283,7 +283,7 @@ import { generateMockUser, generateMockNode } from './generators';
 import { userCreatedNodeConnection } from './connections';
 
 // create a custom config type for strict type checking
-type customMocqConfig: {
+type customMocqConfig = {
   users: MocQ<User>
   nodes: MocQ<Node>
 };
@@ -441,7 +441,7 @@ import { userCreatedNodeConnection } from './connections';
 import { logHandler } from './handlers';
 
 // create a custom config type for strict type checking
-type customMocqConfig: {
+type customMocqConfig = {
   nodes: MocQ<Node>
   users: MocQ<User>
 };

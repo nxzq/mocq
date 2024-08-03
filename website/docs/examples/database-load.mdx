@@ -193,7 +193,7 @@ import { Publisher, Author, Book } from './types';
 import { generateMockPublisher, generateMockAuthor, generateMockBook } from './generators';
 
 // create a custom config type for strict type checking
-type customMocqConfig: {
+type customMocqConfig = {
   publishers: MocQ<Publisher>
   authors: MocQ<Author>
   books: MocQ<Book>
@@ -413,7 +413,7 @@ import { generateMockPublisher, generateMockAuthor, generateMockBook } from './g
 import { getDbConnection, DbConnection } from './database'
 
 // create a custom config type for strict type checking
-type customMocqConfig: {
+type customMocqConfig = {
   publishers: MocQ<Publisher>
   authors: MocQ<Author>
   books: MocQ<Book>

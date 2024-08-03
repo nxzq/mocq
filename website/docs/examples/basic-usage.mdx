@@ -34,7 +34,7 @@ type Tag = {
 type Element = {
   id: string
   name: string
-  tags: Tag[]
+  tags: string[]
   created_by: string
 };`}
     </CodeBlock>
@@ -59,7 +59,7 @@ export type Tag = {
 export type Element = {
   id: string
   name: string
-  tags: Tag[]
+  tags: string[]
   created_by: string
 };`}
     </CodeBlock>
@@ -108,7 +108,7 @@ export function generateMockUser(i: number): User {
     first_name: \`first_name_\${i}\`,
     last_name: \`last_name_\${i}\`,
   };
-});
+};
 
 export function generateMockTag(i: number): Tag {
   return {
@@ -116,7 +116,7 @@ export function generateMockTag(i: number): Tag {
     name: \`tag_name_\${i}\`,
     created_by: 'unknown',
   };
-});
+};
 
 export function generateMockElement(i: number): Element {
   return {
