@@ -14,7 +14,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 <Tabs groupId="code-block-language">
-  <TabItem value="js" label="JavaScript">
+  <TabItem value="js" label="JavaScript" attributes={{className: 'javascript-tab'}}>
     ```js
     import { mocq } from "mocq";
     import { faker } from "@faker-js/faker";
@@ -36,7 +36,7 @@ import TabItem from '@theme/TabItem';
     const { data: { users } } = generate();
     ```
   </TabItem>
-  <TabItem value="ts" label="TypeScript">
+  <TabItem value="ts" label="TypeScript" attributes={{className: 'typescript-tab'}}>
   ```ts
   import { mocq, MocQ } from "mocq";
   import { faker } from "@faker-js/faker";
@@ -103,7 +103,7 @@ when generating unique fields, consider creating a string literal with the index
 as faker will duplicate random values in large enough data sets
 
 <Tabs groupId="code-block-language">
-  <TabItem value="js" label="JavaScript">
+  <TabItem value="js" label="JavaScript" attributes={{className: 'javascript-tab'}}>
     ```js
     const fakerCompanyGenerator = (i) => ({
       // highlight-next-line
@@ -111,7 +111,7 @@ as faker will duplicate random values in large enough data sets
     });
     ```
   </TabItem>
-  <TabItem value="ts" label="TypeScript">
+  <TabItem value="ts" label="TypeScript" attributes={{className: 'typescript-tab'}}>
     ```ts
     const fakerCompanyGenerator = (i: number): Company => ({
       // highlight-next-line
@@ -128,7 +128,7 @@ as faker will duplicate random values in large enough data sets
 faker has many useful helper functions including `faker.helpers.arrayElement` which grabs a random value from an array, it works great as a connection function if the desired result is that the data is simply connected in some way
 
 <Tabs groupId="code-block-language">
-  <TabItem value="js" label="JavaScript">
+  <TabItem value="js" label="JavaScript" attributes={{className: 'javascript-tab'}}>
   ```js
   const { generate } = mocq({
     users: {
@@ -148,7 +148,7 @@ faker has many useful helper functions including `faker.helpers.arrayElement` wh
   const { data: { users, companies } } = generate();
   ```
   </TabItem>
-  <TabItem value="ts" label="TypeScript">
+  <TabItem value="ts" label="TypeScript" attributes={{className: 'typescript-tab'}}>
   ```ts
   const { generate } = mocq({
     users: {

@@ -17,7 +17,7 @@ import TabItem from '@theme/TabItem';
 import CodeBlock from '@theme/CodeBlock';
 
 <Tabs groupId="code-block-language">
-  <TabItem value="js" label="JavaScript">
+  <TabItem value="js" label="JavaScript" attributes={{className: 'javascript-tab'}}>
     <CodeBlock language="ts">
 {`type User = {
   alias: string
@@ -39,7 +39,7 @@ type Element = {
 };`}
     </CodeBlock>
   </TabItem>
-  <TabItem value="ts" label="TypeScript">
+  <TabItem value="ts" label="TypeScript" attributes={{className: 'typescript-tab'}}>
     <CodeBlock
       language="ts"
       title="/types.ts"
@@ -71,7 +71,7 @@ export type Element = {
 Here are our base data generators
 
 <Tabs groupId="code-block-language">
-  <TabItem value="js" label="JavaScript">
+  <TabItem value="js" label="JavaScript" attributes={{className: 'javascript-tab'}}>
     <CodeBlock language="js"
       title="/generators.js"
       showLineNumbers>
@@ -95,7 +95,7 @@ export const generateMockElement = (i) => ({
 });`}
     </CodeBlock>
   </TabItem>
-  <TabItem value="ts" label="TypeScript">
+  <TabItem value="ts" label="TypeScript" attributes={{className: 'typescript-tab'}}>
     <CodeBlock
       language="ts"
       title="/generators.ts"
@@ -137,7 +137,7 @@ We don't really care _how_ our data is connected just that it _is in some way_
 > we will use this helper functions to grab a random element out of an array
 
 <Tabs groupId="code-block-language">
-  <TabItem value="js" label="JavaScript">
+  <TabItem value="js" label="JavaScript" attributes={{className: 'javascript-tab'}}>
     <CodeBlock language="js"
       title="/utils.js"
       showLineNumbers>
@@ -150,7 +150,7 @@ export const getRandomArrElements = (data, maxCount) => {
 };`}
     </CodeBlock>
   </TabItem>
-  <TabItem value="ts" label="TypeScript">
+  <TabItem value="ts" label="TypeScript" attributes={{className: 'typescript-tab'}}>
     <CodeBlock
       language="ts"
       title="/utils.ts"
@@ -169,7 +169,7 @@ export function getRandomArrElements<T>(data: T[], maxCount: number): T[] {
 ## Configuration
 
 <Tabs groupId="code-block-language">
-  <TabItem value="js" label="JavaScript">
+  <TabItem value="js" label="JavaScript" attributes={{className: 'javascript-tab'}}>
     <CodeBlock language="js"
       title="/index.js"
       showLineNumbers>
@@ -202,7 +202,7 @@ const { generate } = mocq({
 const { data: { users, tags, elements} } = generate();`}
     </CodeBlock>
   </TabItem>
-  <TabItem value="ts" label="TypeScript">
+  <TabItem value="ts" label="TypeScript" attributes={{className: 'typescript-tab'}}>
     <CodeBlock
       language="ts"
       title="/index.ts"

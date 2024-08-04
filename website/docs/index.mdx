@@ -10,17 +10,22 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 <Tabs>
-  <TabItem value="npm" label="npm" default>
+  <TabItem value="npm" label="npm" default attributes={{className: 'npm-tab'}}>
     ```bash
     npm i --save-dev mocq
     ```
   </TabItem>
-  <TabItem value="yarn" label="yarn">
+  <TabItem value="yarn" label="yarn" attributes={{className: 'yarn-tab'}}>
     ```bash
     yarn add --dev mocq
     ```
   </TabItem>
-  <TabItem value="bun" label="bun">
+  <TabItem value="pnpm" label="pnpm" attributes={{className: 'pnpm-tab'}}>
+    ```bash
+    pnpm add --save-dev mocq
+    ```
+  </TabItem>
+  <TabItem value="bun" label="bun" attributes={{className: 'bun-tab'}}>
     ```bash
     bun add --dev mocq
     ```
