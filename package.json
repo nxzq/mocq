@@ -16,14 +16,14 @@
     "test": "cd src && rm -rf dist && bun test --coverage"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.4.4",
-    "@commitlint/config-conventional": "^18.4.4",
-    "@typescript-eslint/eslint-plugin": "^6.19.0",
-    "@typescript-eslint/parser": "^6.19.0",
-    "eslint": "^8.56.0",
+    "@commitlint/cli": "^18.6.1",
+    "@commitlint/config-conventional": "^18.6.3",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.0",
     "husky": "^8.0.0",
-    "lint-staged": "^15.2.0",
-    "typescript": "^5.3.3"
+    "lint-staged": "^15.2.8",
+    "typescript": "^5.5.4"
   },
   "commitlint": {
     "extends": [

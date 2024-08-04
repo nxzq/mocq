@@ -1,6 +1,6 @@
 {
   "name": "mocq",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "module": "index.ts",
   "sideEffects": false,
   "type": "module",
@@ -24,9 +24,7 @@
   "keywords": ["mock", "testing-tool", "test-scaffolder"],
   "devDependencies": {
     "bun-types": "latest",
-    "bun-plugin-dts": "^0.2.1"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "bun-plugin-dts": "^0.2.3",
+    "typescript": "^5.5.4"
   }
 }

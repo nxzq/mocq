@@ -9,10 +9,8 @@
     "example:zod": "bun zod.ts"
   },
   "devDependencies": {
-    "bun-types": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "bun-types": "latest",
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "@anatine/zod-mock": "^3.13.3",
